@@ -1,0 +1,285 @@
+// Generated automatically by nearley
+// http://github.com/Hardmath123/nearley
+(function () {
+function id(x) {return x[0]; }
+
+
+function extractValue(d) {
+    return d[1][0]
+}
+
+function extractArray(d) {
+    return d[0].concat(d[1])
+}
+
+var grammar = {
+    Lexer: undefined,
+    ParserRules: [
+    {"name": "dqstring$ebnf$1", "symbols": []},
+    {"name": "dqstring$ebnf$1", "symbols": ["dqstring$ebnf$1", "dstrchar"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "dqstring", "symbols": [{"literal":"\""}, "dqstring$ebnf$1", {"literal":"\""}], "postprocess": function(d) {return d[1].join(""); }},
+    {"name": "sqstring$ebnf$1", "symbols": []},
+    {"name": "sqstring$ebnf$1", "symbols": ["sqstring$ebnf$1", "sstrchar"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "sqstring", "symbols": [{"literal":"'"}, "sqstring$ebnf$1", {"literal":"'"}], "postprocess": function(d) {return d[1].join(""); }},
+    {"name": "btstring$ebnf$1", "symbols": []},
+    {"name": "btstring$ebnf$1", "symbols": ["btstring$ebnf$1", /[^`]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "btstring", "symbols": [{"literal":"`"}, "btstring$ebnf$1", {"literal":"`"}], "postprocess": function(d) {return d[1].join(""); }},
+    {"name": "dstrchar", "symbols": [/[^\\"\n]/], "postprocess": id},
+    {"name": "dstrchar", "symbols": [{"literal":"\\"}, "strescape"], "postprocess": 
+        function(d) {
+            return JSON.parse("\""+d.join("")+"\"");
+        }
+        },
+    {"name": "sstrchar", "symbols": [/[^\\'\n]/], "postprocess": id},
+    {"name": "sstrchar", "symbols": [{"literal":"\\"}, "strescape"], "postprocess": function(d) { return JSON.parse("\""+d.join("")+"\""); }},
+    {"name": "sstrchar$string$1", "symbols": [{"literal":"\\"}, {"literal":"'"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "sstrchar", "symbols": ["sstrchar$string$1"], "postprocess": function(d) {return "'"; }},
+    {"name": "strescape", "symbols": [/["\\\/bfnrt]/], "postprocess": id},
+    {"name": "strescape", "symbols": [{"literal":"u"}, /[a-fA-F0-9]/, /[a-fA-F0-9]/, /[a-fA-F0-9]/, /[a-fA-F0-9]/], "postprocess": 
+        function(d) {
+            return d.join("");
+        }
+        },
+    {"name": "unsigned_int$ebnf$1", "symbols": [/[0-9]/]},
+    {"name": "unsigned_int$ebnf$1", "symbols": ["unsigned_int$ebnf$1", /[0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "unsigned_int", "symbols": ["unsigned_int$ebnf$1"], "postprocess": 
+        function(d) {
+            return parseInt(d[0].join(""));
+        }
+        },
+    {"name": "int$ebnf$1$subexpression$1", "symbols": [{"literal":"-"}]},
+    {"name": "int$ebnf$1$subexpression$1", "symbols": [{"literal":"+"}]},
+    {"name": "int$ebnf$1", "symbols": ["int$ebnf$1$subexpression$1"], "postprocess": id},
+    {"name": "int$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "int$ebnf$2", "symbols": [/[0-9]/]},
+    {"name": "int$ebnf$2", "symbols": ["int$ebnf$2", /[0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "int", "symbols": ["int$ebnf$1", "int$ebnf$2"], "postprocess": 
+        function(d) {
+            if (d[0]) {
+                return parseInt(d[0][0]+d[1].join(""));
+            } else {
+                return parseInt(d[1].join(""));
+            }
+        }
+        },
+    {"name": "unsigned_decimal$ebnf$1", "symbols": [/[0-9]/]},
+    {"name": "unsigned_decimal$ebnf$1", "symbols": ["unsigned_decimal$ebnf$1", /[0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "unsigned_decimal$ebnf$2$subexpression$1$ebnf$1", "symbols": [/[0-9]/]},
+    {"name": "unsigned_decimal$ebnf$2$subexpression$1$ebnf$1", "symbols": ["unsigned_decimal$ebnf$2$subexpression$1$ebnf$1", /[0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "unsigned_decimal$ebnf$2$subexpression$1", "symbols": [{"literal":"."}, "unsigned_decimal$ebnf$2$subexpression$1$ebnf$1"]},
+    {"name": "unsigned_decimal$ebnf$2", "symbols": ["unsigned_decimal$ebnf$2$subexpression$1"], "postprocess": id},
+    {"name": "unsigned_decimal$ebnf$2", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "unsigned_decimal", "symbols": ["unsigned_decimal$ebnf$1", "unsigned_decimal$ebnf$2"], "postprocess": 
+        function(d) {
+            return parseFloat(
+                d[0].join("") +
+                (d[1] ? "."+d[1][1].join("") : "")
+            );
+        }
+        },
+    {"name": "decimal$ebnf$1", "symbols": [{"literal":"-"}], "postprocess": id},
+    {"name": "decimal$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "decimal$ebnf$2", "symbols": [/[0-9]/]},
+    {"name": "decimal$ebnf$2", "symbols": ["decimal$ebnf$2", /[0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "decimal$ebnf$3$subexpression$1$ebnf$1", "symbols": [/[0-9]/]},
+    {"name": "decimal$ebnf$3$subexpression$1$ebnf$1", "symbols": ["decimal$ebnf$3$subexpression$1$ebnf$1", /[0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "decimal$ebnf$3$subexpression$1", "symbols": [{"literal":"."}, "decimal$ebnf$3$subexpression$1$ebnf$1"]},
+    {"name": "decimal$ebnf$3", "symbols": ["decimal$ebnf$3$subexpression$1"], "postprocess": id},
+    {"name": "decimal$ebnf$3", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "decimal", "symbols": ["decimal$ebnf$1", "decimal$ebnf$2", "decimal$ebnf$3"], "postprocess": 
+        function(d) {
+            return parseFloat(
+                (d[0] || "") +
+                d[1].join("") +
+                (d[2] ? "."+d[2][1].join("") : "")
+            );
+        }
+        },
+    {"name": "percentage", "symbols": ["decimal", {"literal":"%"}], "postprocess": 
+        function(d) {
+            return d[0]/100;
+        }
+        },
+    {"name": "jsonfloat$ebnf$1", "symbols": [{"literal":"-"}], "postprocess": id},
+    {"name": "jsonfloat$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "jsonfloat$ebnf$2", "symbols": [/[0-9]/]},
+    {"name": "jsonfloat$ebnf$2", "symbols": ["jsonfloat$ebnf$2", /[0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "jsonfloat$ebnf$3$subexpression$1$ebnf$1", "symbols": [/[0-9]/]},
+    {"name": "jsonfloat$ebnf$3$subexpression$1$ebnf$1", "symbols": ["jsonfloat$ebnf$3$subexpression$1$ebnf$1", /[0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "jsonfloat$ebnf$3$subexpression$1", "symbols": [{"literal":"."}, "jsonfloat$ebnf$3$subexpression$1$ebnf$1"]},
+    {"name": "jsonfloat$ebnf$3", "symbols": ["jsonfloat$ebnf$3$subexpression$1"], "postprocess": id},
+    {"name": "jsonfloat$ebnf$3", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "jsonfloat$ebnf$4$subexpression$1$ebnf$1", "symbols": [/[+-]/], "postprocess": id},
+    {"name": "jsonfloat$ebnf$4$subexpression$1$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "jsonfloat$ebnf$4$subexpression$1$ebnf$2", "symbols": [/[0-9]/]},
+    {"name": "jsonfloat$ebnf$4$subexpression$1$ebnf$2", "symbols": ["jsonfloat$ebnf$4$subexpression$1$ebnf$2", /[0-9]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "jsonfloat$ebnf$4$subexpression$1", "symbols": [/[eE]/, "jsonfloat$ebnf$4$subexpression$1$ebnf$1", "jsonfloat$ebnf$4$subexpression$1$ebnf$2"]},
+    {"name": "jsonfloat$ebnf$4", "symbols": ["jsonfloat$ebnf$4$subexpression$1"], "postprocess": id},
+    {"name": "jsonfloat$ebnf$4", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "jsonfloat", "symbols": ["jsonfloat$ebnf$1", "jsonfloat$ebnf$2", "jsonfloat$ebnf$3", "jsonfloat$ebnf$4"], "postprocess": 
+        function(d) {
+            return parseFloat(
+                (d[0] || "") +
+                d[1].join("") +
+                (d[2] ? "."+d[2][1].join("") : "") +
+                (d[3] ? "e" + (d[3][1] || "+") + d[3][2].join("") : "")
+            );
+        }
+        },
+    {"name": "_$ebnf$1", "symbols": []},
+    {"name": "_$ebnf$1", "symbols": ["_$ebnf$1", "wschar"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "_", "symbols": ["_$ebnf$1"], "postprocess": function(d) {return null;}},
+    {"name": "__$ebnf$1", "symbols": ["wschar"]},
+    {"name": "__$ebnf$1", "symbols": ["__$ebnf$1", "wschar"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "__", "symbols": ["__$ebnf$1"], "postprocess": function(d) {return null;}},
+    {"name": "wschar", "symbols": [/[ \t\n\v\f]/], "postprocess": id},
+    {"name": "main$subexpression$1", "symbols": ["annotation"]},
+    {"name": "main$subexpression$1", "symbols": ["annotationPair"]},
+    {"name": "main", "symbols": ["main$subexpression$1"], "postprocess": 
+        function (data) {
+            return data[0][0]
+        }
+        },
+    {"name": "annotation$string$1", "symbols": [{"literal":"<"}, {"literal":"!"}, {"literal":"-"}, {"literal":"-"}, {"literal":" "}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "annotation$string$2", "symbols": [{"literal":"-"}, {"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "annotation", "symbols": ["annotation$string$1", "_", "annotationContent", "_", "annotation$string$2"], "postprocess": 
+        function(data) {
+            return {
+                type: 'annotation',
+                properties: data[2]
+            };
+        }
+        },
+    {"name": "annotationPair$string$1", "symbols": [{"literal":"<"}, {"literal":"!"}, {"literal":"-"}, {"literal":"-"}, {"literal":" "}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "annotationPair$string$2", "symbols": [{"literal":"-"}, {"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "annotationPair$string$3", "symbols": [{"literal":"`"}, {"literal":"`"}, {"literal":"`"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "annotationPair$string$4", "symbols": [{"literal":"`"}, {"literal":"`"}, {"literal":"`"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "annotationPair", "symbols": ["annotationPair$string$1", "_", "annotationContent", "_", "annotationPair$string$2", "_", "annotationPair$string$3", {"literal":"\n"}, "raw_code", {"literal":"\n"}, "annotationPair$string$4"], "postprocess": 
+        function(data) {
+            return {
+                type: 'annotationPair',
+                properties: data[2],
+                codeBlock: data[8]
+            };
+        }
+        },
+    {"name": "raw_code$ebnf$1", "symbols": [/./]},
+    {"name": "raw_code$ebnf$1", "symbols": ["raw_code$ebnf$1", /./], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "raw_code", "symbols": ["raw_code$ebnf$1"], "postprocess": function(d) { return d[0].join(""); }},
+    {"name": "annotationContent$ebnf$1", "symbols": []},
+    {"name": "annotationContent$ebnf$1$subexpression$1", "symbols": ["__", "value"], "postprocess": extractValue},
+    {"name": "annotationContent$ebnf$1", "symbols": ["annotationContent$ebnf$1", "annotationContent$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "annotationContent", "symbols": ["value", "annotationContent$ebnf$1"], "postprocess": extractArray},
+    {"name": "typeProperty$subexpression$1$string$1", "symbols": [{"literal":"s"}, {"literal":"c"}, {"literal":"h"}, {"literal":"e"}, {"literal":"m"}, {"literal":"a"}, {"literal":"-"}, {"literal":"d"}, {"literal":"e"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$1"]},
+    {"name": "typeProperty$subexpression$1$string$2", "symbols": [{"literal":"l"}, {"literal":"e"}, {"literal":"n"}, {"literal":"s"}, {"literal":"-"}, {"literal":"d"}, {"literal":"e"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$2"]},
+    {"name": "typeProperty$subexpression$1$string$3", "symbols": [{"literal":"c"}, {"literal":"o"}, {"literal":"n"}, {"literal":"t"}, {"literal":"a"}, {"literal":"i"}, {"literal":"n"}, {"literal":"e"}, {"literal":"r"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$3"]},
+    {"name": "typeProperty", "symbols": ["typeProperty$subexpression$1"], "postprocess": 
+        function(data, location) {
+            return {
+                type: 'typeProperty',
+                value: data[0][0],
+                location
+            };
+        }
+           },
+    {"name": "assignmentProperty$subexpression$1$subexpression$1$string$1", "symbols": [{"literal":"s"}, {"literal":"c"}, {"literal":"h"}, {"literal":"e"}, {"literal":"m"}, {"literal":"a"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$1"]},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1$string$2", "symbols": [{"literal":"i"}, {"literal":"d"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$2"]},
+    {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["sqstring"]},
+    {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["dqstring"]},
+    {"name": "assignmentProperty$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1", "_", {"literal":"="}, "_", "assignmentProperty$subexpression$1$subexpression$2"]},
+    {"name": "assignmentProperty", "symbols": ["assignmentProperty$subexpression$1"], "postprocess": 
+        function(data, location) {
+            return {
+                type: 'assignmentProperty',
+                key: data[0][0][0],
+                value: data[0][4][0],
+                location
+            };
+        }
+            },
+    {"name": "finderProperty$subexpression$1", "symbols": ["stringFinder"]},
+    {"name": "finderProperty$subexpression$1", "symbols": ["rangeFinder"]},
+    {"name": "finderProperty", "symbols": ["finderProperty$subexpression$1"], "postprocess": 
+        function(data) {
+            return data[0][0]
+        }
+        },
+    {"name": "stringFinder$subexpression$1", "symbols": ["sqstring"]},
+    {"name": "stringFinder$subexpression$1", "symbols": ["dqstring"]},
+    {"name": "stringFinder$subexpression$2", "symbols": []},
+    {"name": "stringFinder$subexpression$2$string$1", "symbols": [{"literal":"."}, {"literal":"s"}, {"literal":"t"}, {"literal":"a"}, {"literal":"r"}, {"literal":"t"}, {"literal":"i"}, {"literal":"n"}, {"literal":"g"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "stringFinder$subexpression$2", "symbols": ["stringFinder$subexpression$2$string$1"]},
+    {"name": "stringFinder$subexpression$2$string$2", "symbols": [{"literal":"."}, {"literal":"e"}, {"literal":"n"}, {"literal":"t"}, {"literal":"i"}, {"literal":"r"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "stringFinder$subexpression$2", "symbols": ["stringFinder$subexpression$2$string$2"]},
+    {"name": "stringFinder$subexpression$2$string$3", "symbols": [{"literal":"."}, {"literal":"c"}, {"literal":"o"}, {"literal":"n"}, {"literal":"t"}, {"literal":"a"}, {"literal":"i"}, {"literal":"n"}, {"literal":"i"}, {"literal":"n"}, {"literal":"g"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "stringFinder$subexpression$2", "symbols": ["stringFinder$subexpression$2$string$3"]},
+    {"name": "stringFinder$subexpression$3", "symbols": []},
+    {"name": "stringFinder$subexpression$3", "symbols": [{"literal":"["}, "_", "int", "_", {"literal":"]"}]},
+    {"name": "stringFinder$string$1", "symbols": [{"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "stringFinder$subexpression$4", "symbols": ["memberExpression"]},
+    {"name": "stringFinder", "symbols": ["stringFinder$subexpression$1", "stringFinder$subexpression$2", "stringFinder$subexpression$3", "_", "stringFinder$string$1", "_", "stringFinder$subexpression$4"], "postprocess": 
+        function(data, location) {
+            const rule = (data[1][0]) ? data[1][0].substring(1) : 'entire'
+            const occurrence = (data[2][2]) ? data[2][2] : 0
+        
+            return {
+                type: 'finderProperty',
+                finderType: 'stringFinder',
+                string: data[0][0],
+                rule: rule,
+                occurrence: occurrence,
+                propertyPath: data[6][0],
+                location
+            };
+        }
+           },
+    {"name": "rangeFinder$string$1", "symbols": [{"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "rangeFinder$subexpression$1", "symbols": ["memberExpression"]},
+    {"name": "rangeFinder", "symbols": ["int", {"literal":"-"}, "int", "_", "rangeFinder$string$1", "_", "rangeFinder$subexpression$1"], "postprocess": 
+        function(data, location) {
+            return {
+                type: 'finderProperty',
+                finderType: 'rangeFinder',
+                start: data[0],
+                end: data[2],
+                location
+            };
+        }
+           },
+    {"name": "memberExpression$ebnf$1", "symbols": []},
+    {"name": "memberExpression$ebnf$1$subexpression$1", "symbols": ["_", {"literal":"."}, "_", "keyName"]},
+    {"name": "memberExpression$ebnf$1", "symbols": ["memberExpression$ebnf$1", "memberExpression$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "memberExpression", "symbols": ["keyName", "memberExpression$ebnf$1"], "postprocess": 
+        function (data) {
+            const otherKeys = data[1].map(i=> {
+                return i[3]
+            })
+            return {
+                type: 'memberExpression',
+                keys: [data[0]].concat(otherKeys)
+            }
+        }
+        },
+    {"name": "keyName$ebnf$1$subexpression$1", "symbols": [/[a-zA-Z_]/]},
+    {"name": "keyName$ebnf$1", "symbols": ["keyName$ebnf$1$subexpression$1"]},
+    {"name": "keyName$ebnf$1$subexpression$2", "symbols": [/[a-zA-Z_]/]},
+    {"name": "keyName$ebnf$1", "symbols": ["keyName$ebnf$1", "keyName$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "keyName", "symbols": ["keyName$ebnf$1"], "postprocess": function(d) { return d[0].join(""); }},
+    {"name": "value", "symbols": ["sqstring"]},
+    {"name": "value", "symbols": ["typeProperty"]},
+    {"name": "value", "symbols": ["assignmentProperty"]},
+    {"name": "value", "symbols": ["finderProperty"]}
+]
+  , ParserStart: "main"
+}
+if (typeof module !== 'undefined'&& typeof module.exports !== 'undefined') {
+   module.exports = grammar;
+} else {
+   window.grammar = grammar;
+}
+})();
