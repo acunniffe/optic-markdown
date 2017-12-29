@@ -154,12 +154,12 @@ var grammar = {
     {"name": "annotationPair$string$2", "symbols": [{"literal":"-"}, {"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "annotationPair$string$3", "symbols": [{"literal":"`"}, {"literal":"`"}, {"literal":"`"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "annotationPair$string$4", "symbols": [{"literal":"`"}, {"literal":"`"}, {"literal":"`"}], "postprocess": function joiner(d) {return d.join('');}},
-    {"name": "annotationPair", "symbols": ["annotationPair$string$1", "_", "annotationContent", "_", "annotationPair$string$2", "_", "annotationPair$string$3", {"literal":"\n"}, "raw_code", {"literal":"\n"}, "annotationPair$string$4"], "postprocess": 
+    {"name": "annotationPair", "symbols": ["annotationPair$string$1", "_", "annotationContent", "_", "annotationPair$string$2", "_", "annotationPair$string$3", "raw_code", {"literal":"\n"}, "raw_code", {"literal":"\n"}, "annotationPair$string$4"], "postprocess": 
         function(data) {
             return {
                 type: 'annotationPair',
                 properties: data[2],
-                codeBlock: data[8]
+                codeBlock: data[9]
             };
         }
         },
@@ -270,7 +270,6 @@ var grammar = {
     {"name": "keyName$ebnf$1$subexpression$2", "symbols": [/[a-zA-Z_]/]},
     {"name": "keyName$ebnf$1", "symbols": ["keyName$ebnf$1", "keyName$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "keyName", "symbols": ["keyName$ebnf$1"], "postprocess": function(d) { return d[0].join(""); }},
-    {"name": "value", "symbols": ["sqstring"]},
     {"name": "value", "symbols": ["typeProperty"]},
     {"name": "value", "symbols": ["assignmentProperty"]},
     {"name": "value", "symbols": ["finderProperty"]}

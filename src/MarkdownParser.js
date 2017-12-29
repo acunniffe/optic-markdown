@@ -26,17 +26,12 @@ export function parseMarkdown(file, callback) {
 		const parsed = annotations.map(a=> {
 			try {
 				const parser = new nearley.Parser(compiledGrammar);
-				console.warn(file)
-				console.warn(a)
 				parser.feed(a);
-				console.warn(parser.results)
 				return parser.results[0]
 			} catch (err) {
 				return ParseError(err)
 			}
 		})
-
-		console.log(parsed)
 
 		const parseErrors = parsed.filter(i=> i.isError)
 		const parsedAnnotations = parsed.filter(i=> !i.isError)
@@ -44,6 +39,6 @@ export function parseMarkdown(file, callback) {
 		// console.log(errors)
 		// console.log(parsedAnnotations)
 
-		callback(contents)
+		callback(errors.concat(parseErrors), parsedAnnotations)
 	})
 }

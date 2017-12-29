@@ -32,7 +32,7 @@ function testGrammarType(type) {
 	return compileGrammar(rawOpticGrammar.replace('main -> (annotation | annotationPair) {%', `main -> (${type}) {%`))
 }
 
-describe.only('markdown comment grammar', () => {
+describe('markdown comment grammar', () => {
 
 
 	it('works for single comments', ()=> {
@@ -47,7 +47,7 @@ describe.only('markdown comment grammar', () => {
 	it('works for comments with code blocks', ()=> {
 		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 		parser.feed("<!-- schema-def --> \n" +
-			"```\n" +
+			"```lang\n" +
 			"code  \n" +
 			"```")
 

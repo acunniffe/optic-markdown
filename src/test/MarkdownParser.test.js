@@ -1,7 +1,7 @@
 import assert from 'assert'
 import {parseMarkdown} from "../MarkdownParser";
 
-describe('markdown parser', ()=> {
+describe.only('markdown parser', ()=> {
 
 	it('no results a file without annotations', (done)=> {
 		parseMarkdown('examples/NoAnnotations.md', (errors, results)=> {
@@ -13,7 +13,7 @@ describe('markdown parser', ()=> {
 
 	it('finds both types of valid annotations', (done)=> {
 		parseMarkdown('examples/TwoAnnotations.md', (errors, results)=> {
-			console.log(errors)
+			assert(!errors.length)
 			console.log(results)
 			done()
 		})

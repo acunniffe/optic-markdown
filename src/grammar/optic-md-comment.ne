@@ -17,12 +17,12 @@ annotation -> "<!-- " _ annotationContent _ "-->" {%
      }
 %}
 
-annotationPair -> "<!-- " _ annotationContent _ "-->" _ "```" "\n" raw_code "\n" "```" {%
+annotationPair -> "<!-- " _ annotationContent _ "-->" _ "```" raw_code "\n" raw_code "\n" "```" {%
    function(data) {
        return {
            type: 'annotationPair',
            properties: data[2],
-           codeBlock: data[8]
+           codeBlock: data[9]
        };
    }
 %}
@@ -103,8 +103,7 @@ keyName -> ([a-zA-Z_]):+ {% function(d) { return d[0].join(""); } %}
 
 
 value ->
-    sqstring
-  | typeProperty
+    typeProperty
   | assignmentProperty
   | finderProperty
 

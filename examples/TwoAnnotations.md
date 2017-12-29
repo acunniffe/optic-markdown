@@ -3,8 +3,7 @@ Contents of the test file
 
 ## Lens
 
-<!-- lens-def --> 
-
+<!-- lens-def -->
 ```javascript
 var test = 'block'
 ```
