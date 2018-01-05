@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {commentAnnotationRegex} from "../grammar/Regexes";
+import {commentAnnotationRegex} from "../../parser/grammar/Regexes";
 
 describe('comment annotation regex', ()=> {
 

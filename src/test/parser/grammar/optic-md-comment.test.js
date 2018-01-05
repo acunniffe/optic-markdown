@@ -2,7 +2,7 @@ import assert from 'assert'
 import equals from 'deep-equal'
 
 import nearley from 'nearley'
-import grammar from '../grammar/compiled/optic-md-comment'
+import grammar from '../../../parser/grammar/compiled/optic-md-comment'
 
 import compile from "nearley/lib/compile"
 import generate from "nearley/lib/generate"
@@ -28,12 +28,11 @@ function compileGrammar(sourceCode) {
 }
 
 function testGrammarType(type) {
-	const rawOpticGrammar = fs.readFileSync('src/grammar/optic-md-comment.ne', 'utf8')
+	const rawOpticGrammar = fs.readFileSync('src/parser/grammar/optic-md-comment.ne', 'utf8')
 	return compileGrammar(rawOpticGrammar.replace('main -> (annotation | annotationPair) {%', `main -> (${type}) {%`))
 }
 
 describe('markdown comment grammar', () => {
-
 
 	it('works for single comments', ()=> {
 		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
@@ -52,7 +51,6 @@ describe('markdown comment grammar', () => {
 			"```")
 
 		const expected = {"type":"annotationPair","properties":[{"type":"typeProperty","value":"schema-def","location":5}],"codeBlock":"code  "}
-
 
 		assert(equals(expected, parser.results[0]))
 	})
@@ -98,7 +96,6 @@ describe('markdown comment grammar', () => {
 		it('range finders', ()=> {
 			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('finderProperty')));
 			parser.feed("12-35 -> one.two.three")
-			console.log(parser.results[0])
 			const expected = { type: 'finderProperty',
 				finderType: 'rangeFinder',
 				start: 12,

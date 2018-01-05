@@ -18,6 +18,17 @@
   },
   "dependencies": {
     "deep-equal": "^1.0.1",
-    "nearley": "^2.11.0"
+    "deep-freeze": "0.0.1",
+    "nearley": "^2.11.0",
+    "ajv": "^5.2.2",
+    "args-js": "^0.10.12",
+    "get-arguments": "^1.0.2",
+    "is-valid-path": "^0.1.1",
+    "json-schema-deref-sync": "^0.3.3",
+    "lodash": "^4.17.4",
+    "object-filter": "^1.0.2",
+    "object-path": "^0.11.4",
+    "object.map": "^1.0.0",
+    "read-file": "^0.2.0"
   }
 }

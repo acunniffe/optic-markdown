@@ -1,26 +1,26 @@
-import grammar from './grammar/compiled/optic-md-comment'
+import nearley from "nearley";
+import {commentAnnotationRegex} from "../grammar/Regexes";
+import grammar from '../grammar/compiled/optic-md-comment'
 import fs from 'fs'
-import {commentAnnotationRegex} from "./grammar/Regexes";
-import {NoAnnotationsFound, ParseError} from "./Errors";
-import nearley from 'nearley'
+import compiledGrammar from '../grammar/compiled/optic-md-comment'
+import {NoAnnotationsFound, ParseError} from "../../Errors";
 
-const compiledGrammar = nearley.Grammar.fromCompiled(grammar)
+export function parse(file, callback) {
 
-export function parseMarkdown(file, callback) {
 	fs.readFile(file, 'utf8', (err, contents)=> {
 
 		const errors = []
 
 		if (err) {
 			errors.push(err)
-			return callback(errors)
+			return callback(undefined, errors)
 		}
 
 		const annotations = contents.match(commentAnnotationRegex)
 
 		if (annotations === null) {
 			errors.push(NoAnnotationsFound(file))
-			return callback(errors)
+			return callback(undefined, errors)
 		}
 
 		const parsed = annotations.map(a=> {
@@ -36,9 +36,7 @@ export function parseMarkdown(file, callback) {
 		const parseErrors = parsed.filter(i=> i.isError)
 		const parsedAnnotations = parsed.filter(i=> !i.isError)
 
-		// console.log(errors)
-		// console.log(parsedAnnotations)
-
-		callback(errors.concat(parseErrors), parsedAnnotations)
+		callback(parsedAnnotations, errors.concat(parseErrors))
 	})
+
 }
