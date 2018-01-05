@@ -65,9 +65,10 @@ describe('markdown', () => {
 				'codeBlock': JSON.stringify(testSchema)
 			}
 
-			processAnnotations([schemaObject], (sdkObjects, errors)=> {
-				assert(sdkObjects[0] instanceof Schema)
-				assert(equals(sdkObjects[0].definition, testSchema))
+			processAnnotations([schemaObject], (description, errors)=> {
+				const schema = description.schemas[0]
+				assert(schema instanceof Schema)
+				assert(equals(schema.definition, testSchema))
 				assert(errors.length === 0)
 				done()
 			})
