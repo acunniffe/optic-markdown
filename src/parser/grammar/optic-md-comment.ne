@@ -2,7 +2,7 @@
 @builtin "number.ne"
 @builtin "whitespace.ne"
 
-main -> (annotation | annotationPair) {%
+main -> (annotation | annotationPair | dependencies) {%
     function (data) {
         return data[0][0]
     }
@@ -25,6 +25,20 @@ annotationPair -> "<!-- " _ annotationContent _ "-->" _ "```" raw_code "\n" raw_
            codeBlock: data[9]
        };
    }
+%}
+
+dependencies -> "<!-- " _ "DEPENDENCIES"  (__ packageRef):* __ "-->" {%
+    function(data) {
+        return {
+            type: 'dependenciesAnnotation',
+            dependencies: data[3].map(i=> i[1])
+        };
+    }
+ %}
+
+packageRef -> ([\da-z-><\+]):+ "@" [A-Za-z0-9\.\+\*-]:+ {% function(d) {
+    return d[0].join("") + d[1] + d[2].join("")
+  }
 %}
 
 raw_code -> .:+  {% function(d) { return d[0].join(""); } %}

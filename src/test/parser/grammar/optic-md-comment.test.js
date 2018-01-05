@@ -29,7 +29,7 @@ function compileGrammar(sourceCode) {
 
 function testGrammarType(type) {
 	const rawOpticGrammar = fs.readFileSync('src/parser/grammar/optic-md-comment.ne', 'utf8')
-	return compileGrammar(rawOpticGrammar.replace('main -> (annotation | annotationPair) {%', `main -> (${type}) {%`))
+	return compileGrammar(rawOpticGrammar.replace('main -> (annotation | annotationPair | dependencies) {%', `main -> (${type}) {%`))
 }
 
 describe('markdown comment grammar', () => {
@@ -55,6 +55,16 @@ describe('markdown comment grammar', () => {
 		assert(equals(expected, parser.results[0]))
 	})
 
+	it('works for annotation to declare dependencies', ()=> {
+
+		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
+		parser.feed("<!-- DEPENDENCIES \n test@1.1.1 \n test2@1.2.2 -->")
+
+		const expected = {"type":"dependenciesAnnotation","dependencies":["test@1.1.1","test2@1.2.2"]}
+
+		assert(equals(expected, parser.results[0]))
+
+	})
 
 	describe('member expressions', ()=> {
 

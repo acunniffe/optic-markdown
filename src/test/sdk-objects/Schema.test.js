@@ -2,7 +2,7 @@ import assert from 'assert'
 import equals from 'deep-equal'
 import {Schema} from "../../sdk-objects/Schema";
 
-describe.only('Schemas', function() {
+describe('Schemas', function() {
 	describe('this is valid', function() {
 
 		it('works for an object schema', function() {

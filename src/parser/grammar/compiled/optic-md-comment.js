@@ -135,6 +135,7 @@ var grammar = {
     {"name": "wschar", "symbols": [/[ \t\n\v\f]/], "postprocess": id},
     {"name": "main$subexpression$1", "symbols": ["annotation"]},
     {"name": "main$subexpression$1", "symbols": ["annotationPair"]},
+    {"name": "main$subexpression$1", "symbols": ["dependencies"]},
     {"name": "main", "symbols": ["main$subexpression$1"], "postprocess": 
         function (data) {
             return data[0][0]
@@ -161,6 +162,30 @@ var grammar = {
                 properties: data[2],
                 codeBlock: data[9]
             };
+        }
+        },
+    {"name": "dependencies$string$1", "symbols": [{"literal":"<"}, {"literal":"!"}, {"literal":"-"}, {"literal":"-"}, {"literal":" "}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "dependencies$string$2", "symbols": [{"literal":"D"}, {"literal":"E"}, {"literal":"P"}, {"literal":"E"}, {"literal":"N"}, {"literal":"D"}, {"literal":"E"}, {"literal":"N"}, {"literal":"C"}, {"literal":"I"}, {"literal":"E"}, {"literal":"S"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "dependencies$ebnf$1", "symbols": []},
+    {"name": "dependencies$ebnf$1$subexpression$1", "symbols": ["__", "packageRef"]},
+    {"name": "dependencies$ebnf$1", "symbols": ["dependencies$ebnf$1", "dependencies$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "dependencies$string$3", "symbols": [{"literal":"-"}, {"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "dependencies", "symbols": ["dependencies$string$1", "_", "dependencies$string$2", "dependencies$ebnf$1", "__", "dependencies$string$3"], "postprocess": 
+        function(data) {
+            return {
+                type: 'dependenciesAnnotation',
+                dependencies: data[3].map(i=> i[1])
+            };
+        }
+         },
+    {"name": "packageRef$ebnf$1$subexpression$1", "symbols": [/[\da-z-><\+]/]},
+    {"name": "packageRef$ebnf$1", "symbols": ["packageRef$ebnf$1$subexpression$1"]},
+    {"name": "packageRef$ebnf$1$subexpression$2", "symbols": [/[\da-z-><\+]/]},
+    {"name": "packageRef$ebnf$1", "symbols": ["packageRef$ebnf$1", "packageRef$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "packageRef$ebnf$2", "symbols": [/[A-Za-z0-9\.\+\*-]/]},
+    {"name": "packageRef$ebnf$2", "symbols": ["packageRef$ebnf$2", /[A-Za-z0-9\.\+\*-]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "packageRef", "symbols": ["packageRef$ebnf$1", {"literal":"@"}, "packageRef$ebnf$2"], "postprocess":  function(d) {
+          return d[0].join("") + d[1] + d[2].join("")
         }
         },
     {"name": "raw_code$ebnf$1", "symbols": [/./]},
