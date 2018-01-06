@@ -195,6 +195,18 @@ var grammar = {
     {"name": "annotationContent$ebnf$1$subexpression$1", "symbols": ["__", "value"], "postprocess": extractValue},
     {"name": "annotationContent$ebnf$1", "symbols": ["annotationContent$ebnf$1", "annotationContent$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "annotationContent", "symbols": ["value", "annotationContent$ebnf$1"], "postprocess": extractArray},
+    {"name": "scope$subexpression$1$string$1", "symbols": [{"literal":"i"}, {"literal":"n"}, {"literal":"t"}, {"literal":"e"}, {"literal":"r"}, {"literal":"n"}, {"literal":"a"}, {"literal":"l"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "scope$subexpression$1", "symbols": ["scope$subexpression$1$string$1"]},
+    {"name": "scope$subexpression$1$string$2", "symbols": [{"literal":"p"}, {"literal":"u"}, {"literal":"b"}, {"literal":"l"}, {"literal":"i"}, {"literal":"c"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "scope$subexpression$1", "symbols": ["scope$subexpression$1$string$2"]},
+    {"name": "scope", "symbols": ["scope$subexpression$1"], "postprocess": 
+        function(data) {
+            return {
+                type: 'scopeProperty',
+                value: data[0][0]
+            };
+        }
+        },
     {"name": "typeProperty$subexpression$1$string$1", "symbols": [{"literal":"s"}, {"literal":"c"}, {"literal":"h"}, {"literal":"e"}, {"literal":"m"}, {"literal":"a"}, {"literal":"-"}, {"literal":"d"}, {"literal":"e"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$1"]},
     {"name": "typeProperty$subexpression$1$string$2", "symbols": [{"literal":"l"}, {"literal":"e"}, {"literal":"n"}, {"literal":"s"}, {"literal":"-"}, {"literal":"d"}, {"literal":"e"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
@@ -245,7 +257,7 @@ var grammar = {
     {"name": "stringFinder$subexpression$2", "symbols": ["stringFinder$subexpression$2$string$3"]},
     {"name": "stringFinder$subexpression$3", "symbols": []},
     {"name": "stringFinder$subexpression$3", "symbols": [{"literal":"["}, "_", "int", "_", {"literal":"]"}]},
-    {"name": "stringFinder$string$1", "symbols": [{"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "stringFinder$string$1", "symbols": [{"literal":"="}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "stringFinder$subexpression$4", "symbols": ["memberExpression"]},
     {"name": "stringFinder", "symbols": ["stringFinder$subexpression$1", "stringFinder$subexpression$2", "stringFinder$subexpression$3", "_", "stringFinder$string$1", "_", "stringFinder$subexpression$4"], "postprocess": 
         function(data, location) {
@@ -263,7 +275,7 @@ var grammar = {
             };
         }
            },
-    {"name": "rangeFinder$string$1", "symbols": [{"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "rangeFinder$string$1", "symbols": [{"literal":"="}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "rangeFinder$subexpression$1", "symbols": ["memberExpression"]},
     {"name": "rangeFinder", "symbols": ["int", {"literal":"-"}, "int", "_", "rangeFinder$string$1", "_", "rangeFinder$subexpression$1"], "postprocess": 
         function(data, location) {
@@ -296,6 +308,7 @@ var grammar = {
     {"name": "keyName$ebnf$1", "symbols": ["keyName$ebnf$1", "keyName$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "keyName", "symbols": ["keyName$ebnf$1"], "postprocess": function(d) { return d[0].join(""); }},
     {"name": "value", "symbols": ["typeProperty"]},
+    {"name": "value", "symbols": ["scope"]},
     {"name": "value", "symbols": ["assignmentProperty"]},
     {"name": "value", "symbols": ["finderProperty"]}
 ]

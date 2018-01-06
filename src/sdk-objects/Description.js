@@ -11,4 +11,8 @@ export class Description {
 		//tbd
 	}
 
+	canPublish() {
+		return this.metaInformation && this.isValid()
+	}
+
 }

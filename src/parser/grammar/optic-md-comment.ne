@@ -45,6 +45,15 @@ raw_code -> .:+  {% function(d) { return d[0].join(""); } %}
 
 annotationContent -> value (__ value {% extractValue %}):* {% extractArray %}
 
+scope -> ("internal" | "public") {%
+     function(data) {
+         return {
+             type: 'scopeProperty',
+             value: data[0][0]
+         };
+     }
+%}
+
 typeProperty -> ("schema-def" | "lens-def" | "container") {%
       function(data, location) {
           return {
@@ -72,7 +81,7 @@ finderProperty -> (stringFinder | rangeFinder) {%
     }
 %}
 
-stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".containing") (null | "[" _ int _ "]") _ "->" _ (memberExpression) {%
+stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".containing") (null | "[" _ int _ "]") _ "=>" _ (memberExpression) {%
       function(data, location) {
           const rule = (data[1][0]) ? data[1][0].substring(1) : 'entire'
           const occurrence = (data[2][2]) ? data[2][2] : 0
@@ -89,7 +98,7 @@ stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".contai
       }
    %}
 
-rangeFinder -> int "-" int _ "->" _ (memberExpression) {%
+rangeFinder -> int "-" int _ "=>" _ (memberExpression) {%
       function(data, location) {
           return {
               type: 'finderProperty',
@@ -118,9 +127,9 @@ keyName -> ([a-zA-Z_]):+ {% function(d) { return d[0].join(""); } %}
 
 value ->
     typeProperty
+  | scope
   | assignmentProperty
   | finderProperty
-
 
 @{%
 

@@ -45,12 +45,12 @@ describe('markdown comment grammar', () => {
 
 	it('works for comments with code blocks', ()=> {
 		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
-		parser.feed("<!-- schema-def --> \n" +
+		parser.feed("<!-- schema-def internal --> \n" +
 			"```lang\n" +
 			"code  \n" +
 			"```")
 
-		const expected = {"type":"annotationPair","properties":[{"type":"typeProperty","value":"schema-def","location":5}],"codeBlock":"code  "}
+		const expected = {"type":"annotationPair","properties":[{"type":"typeProperty","value":"schema-def","location":5},{"type":"scopeProperty","value":"internal"}],"codeBlock":"code  "}
 
 		assert(equals(expected, parser.results[0]))
 	})
@@ -98,14 +98,14 @@ describe('markdown comment grammar', () => {
 
 		it('string finders', ()=> {
 			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('finderProperty')));
-			parser.feed("'hello' -> one.two.three")
+			parser.feed("'hello' => one.two.three")
 			const expected = {"type":"finderProperty","finderType":"stringFinder","string":"hello","rule":"entire","occurrence":0,"propertyPath":{"type":"memberExpression","keys":["one","two","three"]},"location":0}
 			assert(equals(expected, parser.results[0]))
 		})
 
 		it('range finders', ()=> {
 			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('finderProperty')));
-			parser.feed("12-35 -> one.two.three")
+			parser.feed("12-35 => one.two.three")
 			const expected = { type: 'finderProperty',
 				finderType: 'rangeFinder',
 				start: 12,

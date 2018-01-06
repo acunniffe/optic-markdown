@@ -52,3 +52,12 @@ export function InvalidSchemaDefinition(msg, level = 'error') {
 		isError: true
 	}
 }
+
+export function InvalidFinder(msg, level = 'error') {
+	return {
+		level,
+		type: 'InvalidFinder',
+		message: msg,
+		isError: true
+	}
+}

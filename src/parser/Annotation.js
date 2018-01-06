@@ -4,8 +4,10 @@ export class Annotation {
 
 	constructor(type, properties = [], codeBlock) {
 		this.annotationType = type
+
 		//reversed so the final definition is the one that is found first by all the native array methods
 		this.properties = properties.reverse()
+
 		this.codeBlock = codeBlock
 
 		//find the definition type (if any) and assign to a value
@@ -13,6 +15,15 @@ export class Annotation {
 			const typeProperty = properties.find(i=> i.type === 'typeProperty')
 			if (typeProperty) {
 				return typeProperty.value
+			}
+		})()
+
+		this.scope = (()=> {
+			const scopeProperty = properties.find(i=> i.type === 'scopeProperty')
+			if (scopeProperty) {
+				return scopeProperty.value
+			} else {
+				return 'public'
 			}
 		})()
 
@@ -24,6 +35,10 @@ export class Annotation {
 		if (obj) {
 			return obj.value
 		}
+	}
+
+	getPropertiesOfType(type) {
+		return this.properties.filter(i=> i.type === type)
 	}
 
 	errors() {
