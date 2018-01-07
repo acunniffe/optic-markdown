@@ -20,9 +20,6 @@ export class Schema {
 	}
 
 	errors() {
-		console.log("HERE")
-		console.log(this)
-		console.log(this.definition)
 		const errors = []
 
 		if (!this.definition) {

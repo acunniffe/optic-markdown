@@ -5,6 +5,7 @@ import {DefaultContext} from "../../parser/stages/ProcessStage";
 export class Lens {
 
 	constructor(name, schema, block, scope, components, rules) {
+
 		this.name = name
 		this.schema = schema
 		this.block = block

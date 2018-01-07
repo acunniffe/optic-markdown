@@ -109,7 +109,8 @@ describe('markdown', () => {
 							propertyPath: ['pathTo'],
 							location: 74
 						}],
-				codeBlock: 'const definedAs = require(\'pathTo\')'
+				codeBlock: 'const definedAs = require(\'pathTo\')',
+				language: 'javascript'
 			}
 
 			processAnnotations([lensDef], (description, errors) => {

@@ -4,11 +4,12 @@ export function validateDescription(description, errors, callback) {
 
 	const invalidLenses = []
 	const validLenses = []
+
 	description.lenses.forEach(l=> {
 		const validationErrors = l.errors(context)
 		if (validationErrors.length) {
 			invalidLenses.push(l)
-			errors = errors.concat(invalidLenses.difference || [invalidLenses.error])
+			errors = errors.concat(validationErrors)
 		} else {
 			validLenses.push(l)
 		}

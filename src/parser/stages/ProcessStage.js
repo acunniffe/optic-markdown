@@ -30,7 +30,7 @@ export function processAnnotations(rawAnnotations, callback) {
 		validSDKObjects.filter(i=> i instanceof Lens),
 	)
 
-	callback(description, errors.length ? null : errors)
+	callback(description, errors)
 
 }
 
@@ -57,7 +57,7 @@ export function annotationToSdkObject(annotation) {
 
 			const codeComponents = annotation.getPropertiesOfType('finderProperty').map(f=> {
 				const finder = new Finder(f)
-				return new Component('code', finder, f.propertyPath)
+				return new Component('code', finder, f.propertyPath.keys)
 			})
 
 			return new Lens(name, schema, annotation.codeBlock, annotation.scope, codeComponents, [])
