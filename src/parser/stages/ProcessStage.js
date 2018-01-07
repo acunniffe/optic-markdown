@@ -5,7 +5,6 @@ import {Description} from "../../sdk-objects/Description";
 import {Finder} from "../../sdk-objects/lenses/Finder";
 import {Component} from "../../sdk-objects/lenses/Component";
 import {Lens} from "../../sdk-objects/lenses/Lens";
-
 export function processAnnotations(rawAnnotations, callback) {
 
 	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock))
@@ -47,7 +46,7 @@ export function annotationToSdkObject(annotation) {
 			try {
 				json = JSON.parse(annotation.codeBlock)
 			} catch(e) {
-
+				console.log(e)
 			}
 
 			return new Schema(id, json)
@@ -65,3 +64,5 @@ export function annotationToSdkObject(annotation) {
 	}
 
 }
+
+export const DefaultContext = {schemas: []}

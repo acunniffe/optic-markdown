@@ -4,7 +4,7 @@ import {Component} from "../../sdk-objects/lenses/Component";
 import {Lens} from "../../sdk-objects/lenses/Lens";
 import {validateLens} from "../../validation/ValidateLens";
 
-describe.only('Lens validation', ()=> {
+describe('Lens validation', ()=> {
 
 	const testItemSchema = new Schema('test-item', {
 		title: 'TestItem',

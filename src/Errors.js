@@ -61,3 +61,12 @@ export function InvalidFinder(msg, level = 'error') {
 		isError: true
 	}
 }
+
+export function RequiredFieldNotSetInLens(field, level = 'error') {
+	return {
+		level,
+		type: 'RequiredFieldNotSetInLens',
+		message: `Required field ${field.join('.')} not specified in lens`,
+		isError: true
+	}
+}

@@ -20,8 +20,16 @@ export class Schema {
 	}
 
 	errors() {
+		console.log("HERE")
+		console.log(this)
+		console.log(this.definition)
 		const errors = []
-		if (!ajv.validateSchema(this.definition)) {
+
+		if (!this.definition) {
+			errors.push(InvalidSchemaDefinition('Schema definition is not valid JSON'))
+		}
+
+		if (this.definition && !ajv.validateSchema(this.definition)) {
 			errors.push(InvalidSchemaDefinition(ajv.errors))
 		}
 

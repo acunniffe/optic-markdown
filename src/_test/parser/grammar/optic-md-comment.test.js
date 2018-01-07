@@ -50,9 +50,43 @@ describe('markdown comment grammar', () => {
 			"code  \n" +
 			"```")
 
-		const expected = {"type":"annotationPair","properties":[{"type":"typeProperty","value":"schema-def","location":5},{"type":"scopeProperty","value":"internal"}],"codeBlock":"code  "}
+		const expected = { type: 'annotationPair',
+			properties:
+				[ { type: 'typeProperty', value: 'schema-def', location: 5 },
+					{ type: 'scopeProperty', value: 'internal' } ],
+			codeBlock: 'code  ',
+			language: 'lang' }
 
 		assert(equals(expected, parser.results[0]))
+	})
+
+	it('works for several properties assigned in comment', ()=> {
+		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
+		parser.feed("<!-- lens-def internal name='hello' schema=\"other\" --> \n" +
+			"```lang\n" +
+			"{code  \n" +
+			"code2  \n" +
+			"code3}  \n" +
+			"}\n" +
+			"```")
+
+		const expected = { type: 'annotationPair',
+			properties:
+				[ { type: 'typeProperty', value: 'lens-def', location: 5 },
+					{ type: 'scopeProperty', value: 'internal' },
+					{ type: 'assignmentProperty',
+						key: 'name',
+						value: 'hello',
+						location: 23 },
+					{ type: 'assignmentProperty',
+						key: 'schema',
+						value: 'other',
+						location: 36 } ],
+			codeBlock: '{code  \ncode2  \ncode3}  \n}',
+			language: 'lang' }
+
+		assert(equals(expected, parser.results[0]))
+
 	})
 
 	it('works for annotation to declare dependencies', ()=> {

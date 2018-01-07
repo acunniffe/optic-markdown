@@ -155,12 +155,13 @@ var grammar = {
     {"name": "annotationPair$string$2", "symbols": [{"literal":"-"}, {"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "annotationPair$string$3", "symbols": [{"literal":"`"}, {"literal":"`"}, {"literal":"`"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "annotationPair$string$4", "symbols": [{"literal":"`"}, {"literal":"`"}, {"literal":"`"}], "postprocess": function joiner(d) {return d.join('');}},
-    {"name": "annotationPair", "symbols": ["annotationPair$string$1", "_", "annotationContent", "_", "annotationPair$string$2", "_", "annotationPair$string$3", "raw_code", {"literal":"\n"}, "raw_code", {"literal":"\n"}, "annotationPair$string$4"], "postprocess": 
+    {"name": "annotationPair", "symbols": ["annotationPair$string$1", "_", "annotationContent", "_", "annotationPair$string$2", "_", "annotationPair$string$3", "single_line_code", {"literal":"\n"}, "raw_code", {"literal":"\n"}, "annotationPair$string$4"], "postprocess": 
         function(data) {
             return {
                 type: 'annotationPair',
                 properties: data[2],
-                codeBlock: data[9]
+                codeBlock: data[9],
+                language: data[7]
             };
         }
         },
@@ -188,9 +189,16 @@ var grammar = {
           return d[0].join("") + d[1] + d[2].join("")
         }
         },
-    {"name": "raw_code$ebnf$1", "symbols": [/./]},
-    {"name": "raw_code$ebnf$1", "symbols": ["raw_code$ebnf$1", /./], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "raw_code", "symbols": ["raw_code$ebnf$1"], "postprocess": function(d) { return d[0].join(""); }},
+    {"name": "single_line_code$ebnf$1", "symbols": [/[a-z]/]},
+    {"name": "single_line_code$ebnf$1", "symbols": ["single_line_code$ebnf$1", /[a-z]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "single_line_code", "symbols": ["single_line_code$ebnf$1"], "postprocess":  function(d) {
+            return d[0].join("");
+        } },
+    {"name": "raw_code$ebnf$1", "symbols": [/[\S\s]/]},
+    {"name": "raw_code$ebnf$1", "symbols": ["raw_code$ebnf$1", /[\S\s]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "raw_code", "symbols": ["raw_code$ebnf$1"], "postprocess":  function(d) {
+            return d[0].join("");
+        } },
     {"name": "annotationContent$ebnf$1", "symbols": []},
     {"name": "annotationContent$ebnf$1$subexpression$1", "symbols": ["__", "value"], "postprocess": extractValue},
     {"name": "annotationContent$ebnf$1", "symbols": ["annotationContent$ebnf$1", "annotationContent$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
@@ -226,6 +234,8 @@ var grammar = {
     {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$1"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$1$string$2", "symbols": [{"literal":"i"}, {"literal":"d"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$2"]},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1$string$3", "symbols": [{"literal":"n"}, {"literal":"a"}, {"literal":"m"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$3"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["sqstring"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["dqstring"]},
     {"name": "assignmentProperty$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1", "_", {"literal":"="}, "_", "assignmentProperty$subexpression$1$subexpression$2"]},

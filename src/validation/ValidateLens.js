@@ -4,7 +4,6 @@ export function validateLens(lens, schemas) {
 
 	//@todo make sure it validates map schemas properly
 
-	const errors = []
 	const lensSchema = resolveSchema(lens.schema, schemas)
 
 	if (lensSchema) {
@@ -47,9 +46,8 @@ export function validateLens(lens, schemas) {
 
 		return {result: difference.size === 0, difference: Array.from(difference)}
 
-
 	} else {
-		errors.push(`Unable to find schema ${lens.schema}`)
+		return {result: false, error: `Unable to find schema ${lens.schema}`}
 	}
 
 }

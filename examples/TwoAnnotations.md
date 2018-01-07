@@ -8,4 +8,7 @@ Contents of the test file
 <!-- lens-def -->
 ```javascript
 var test = 'block'
+jkhjhghfg
+ghfjhgjfgh
+hgfhgfg
 ```

@@ -57,7 +57,7 @@ const testSchema = new Schema('test-slug', {
 })
 
 
-describe.only('check path', () => {
+describe('check path', () => {
 
 	it('flat path exists', ()=> {
 		assert (equals( getPath(testSchema, ['one']), {type: 'integer'}))

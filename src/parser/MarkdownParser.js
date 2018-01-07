@@ -1,10 +1,18 @@
 import {parse} from "./stages/ParseStage";
 import {processAnnotations} from "./stages/ProcessStage";
+import {validateDescription} from "./stages/ValidateStage";
 
-export function parseMarkdown(file) {
-	parse('examples/NoAnnotations.md', (results, errors1) => {
-		processAnnotations(results, (sdkObjects, errors2)=> {
-			callback(sdkObjects, errors1.concat(errors2))
+export function parseMarkdown(filePath, callback) {
+	parse(filePath, (results, errors1) => {
+		processAnnotations(results, (description, errors2)=> {
+			validateDescription(description, errors1.concat(errors2), (description, errors3) => {
+
+				console.log(description)
+				console.log(errors3)
+
+				callback(description, errors3)
+
+			})
 		})
 	})
 }

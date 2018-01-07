@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "npm run build && find ./lib -name '*.test.js' | xargs mocha -R spec",
+    "scratch": "npm run build && node ./lib/index.js",
     "build": "sh build.sh"
   },
   "license": "MIT",

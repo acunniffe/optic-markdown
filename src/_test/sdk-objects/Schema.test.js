@@ -3,7 +3,7 @@ import equals from 'deep-equal'
 import {Schema} from "../../sdk-objects/Schema";
 
 describe('Schemas', function() {
-	describe('this is valid', function() {
+	describe('that is valid', function() {
 
 		it('works for an object schema', function() {
 

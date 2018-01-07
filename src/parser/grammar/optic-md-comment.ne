@@ -17,12 +17,13 @@ annotation -> "<!-- " _ annotationContent _ "-->" {%
      }
 %}
 
-annotationPair -> "<!-- " _ annotationContent _ "-->" _ "```" raw_code "\n" raw_code "\n" "```" {%
+annotationPair -> "<!-- " _ annotationContent _ "-->" _ "```" single_line_code "\n" raw_code "\n" "```" {%
    function(data) {
        return {
            type: 'annotationPair',
            properties: data[2],
-           codeBlock: data[9]
+           codeBlock: data[9],
+           language: data[7]
        };
    }
 %}
@@ -41,7 +42,13 @@ packageRef -> ([\da-z-><\+]):+ "@" [A-Za-z0-9\.\+\*-]:+ {% function(d) {
   }
 %}
 
-raw_code -> .:+  {% function(d) { return d[0].join(""); } %}
+single_line_code -> [a-z]:+ {% function(d) {
+    return d[0].join("");
+} %}
+
+raw_code -> [\S\s]:+  {% function(d) {
+    return d[0].join("");
+} %}
 
 annotationContent -> value (__ value {% extractValue %}):* {% extractArray %}
 
@@ -64,7 +71,7 @@ typeProperty -> ("schema-def" | "lens-def" | "container") {%
       }
    %}
 
-assignmentProperty -> (("schema" | "id") _ "=" _ (sqstring | dqstring)) {%
+assignmentProperty -> (("schema" | "id" | "name") _ "=" _ (sqstring | dqstring)) {%
        function(data, location) {
            return {
                type: 'assignmentProperty',
