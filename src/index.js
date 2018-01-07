@@ -1,7 +1,18 @@
+import program from 'commander'
 import {parseMarkdown} from "./parser/MarkdownParser";
-import {parse} from "./parser/stages/ParseStage";
 
-parseMarkdown('./examples/Importing-JS.md', (desc, errors)=> {
-	console.log(JSON.stringify(desc))
-	console.log(errors)
+program
+	.usage('[options] <file>')
+	.version('0.1.0')
+	.parse(process.argv);
+
+
+const file = program.args[0]
+
+parseMarkdown(file, (description, errors)=> {
+	if (description) {
+		console.log(JSON.stringify(description))
+	} else {
+		console.error(errors)
+	}
 })
