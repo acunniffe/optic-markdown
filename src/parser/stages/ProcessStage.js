@@ -5,6 +5,7 @@ import {Description} from "../../sdk-objects/Description";
 import {Finder} from "../../sdk-objects/lenses/Finder";
 import {Component} from "../../sdk-objects/lenses/Component";
 import {Lens} from "../../sdk-objects/lenses/Lens";
+import {Metadata} from "../../sdk-objects/Metadata";
 export function processAnnotations(rawAnnotations, callback) {
 
 	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock))
@@ -16,6 +17,15 @@ export function processAnnotations(rawAnnotations, callback) {
 		return new Dependencies(mergedDependencies)
 	})()
 
+	const metadataAnnotation = (()=> {
+		const annotation = sdkAnnotations.find(i=> i.type === 'annotation' && i.definitionType === 'metadata')
+		if (annotation) {
+			new Metadata(annotation.getProperty('author'), annotation.getProperty('name'), annotation.getProperty('version'))
+		} else {
+			return Metadata.empty
+		}
+	})()
+
 	const validAnnotations = sdkAnnotations.filter(i=> i.isValid())
 
 	const asSDKObjects = validAnnotations.map(annotationToSdkObject)
@@ -25,7 +35,7 @@ export function processAnnotations(rawAnnotations, callback) {
 	const errors = sdkAnnotations.filter(i=> !i.isValid()).map(i=> i.errors())
 		     .concat(asSDKObjects.filter(i=> !i.isValid()).map(i=> i.errors()))
 
-	const description = new Description(null, dependenciesAnnotation,
+	const description = new Description(metadataAnnotation, dependenciesAnnotation,
 		validSDKObjects.filter(i=> i instanceof Schema),
 		validSDKObjects.filter(i=> i instanceof Lens),
 	)
@@ -57,7 +67,7 @@ export function annotationToSdkObject(annotation) {
 
 			const codeComponents = annotation.getPropertiesOfType('finderProperty').map(f=> {
 				const finder = new Finder(f)
-				return new Component('code', finder, f.propertyPath.keys)
+				return new Component('code', finder, f.propertyPath)
 			})
 
 			return new Lens(name, schema, annotation.codeBlock, annotation.scope, codeComponents, [])

@@ -1,5 +1,6 @@
 export class Component {
 	constructor(type, finder, propertyPath, location, schema) {
+
 		this.type = type
 
 		//for type 'code'

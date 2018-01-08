@@ -8,6 +8,9 @@
     "scratch": "npm run build && node ./lib/index.js examples/Importing-JS.md",
     "build": "sh build.sh"
   },
+  "bin": {
+    "optic-md": "lib/index.js"
+  },
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",

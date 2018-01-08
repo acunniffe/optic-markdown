@@ -35,6 +35,15 @@ export function MissingCodeBlock(expectedType, level = 'error') {
 	}
 }
 
+export function MissingMetadata(msg, level = 'warning') {
+	return {
+		level,
+		type: 'MissingMetadata',
+		message: msg,
+		isError: true
+	}
+}
+
 export function MissingProperty(msg, level = 'error') {
 	return {
 		level,

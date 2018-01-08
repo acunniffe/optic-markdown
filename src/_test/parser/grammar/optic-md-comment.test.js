@@ -89,7 +89,7 @@ describe('markdown comment grammar', () => {
 
 	})
 
-	it('works for annotation to declare dependencies', ()=> {
+	it('works for annotation that declares dependencies', ()=> {
 
 		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 		parser.feed("<!-- DEPENDENCIES \n test@1.1.1 \n test2@1.2.2 -->")
@@ -99,6 +99,32 @@ describe('markdown comment grammar', () => {
 		assert(equals(expected, parser.results[0]))
 
 	})
+
+	it('works for annotation that sets metadata', ()=> {
+
+		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
+		parser.feed("<!-- metadata \n name='Test' \n author='author' version='0.1.1' -->")
+
+		const expected = { type: 'annotation',
+			properties:
+				[ { type: 'typeProperty', value: 'metadata', location: 5 },
+					{ type: 'assignmentProperty',
+						key: 'name',
+						value: 'Test',
+						location: 16 },
+					{ type: 'assignmentProperty',
+						key: 'author',
+						value: 'author',
+						location: 30 },
+					{ type: 'assignmentProperty',
+						key: 'version',
+						value: '0.1.1',
+						location: 46 } ] }
+
+		assert(equals(expected, parser.results[0]))
+
+	})
+
 
 	describe('member expressions', ()=> {
 

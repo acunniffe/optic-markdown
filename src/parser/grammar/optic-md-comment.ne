@@ -61,7 +61,7 @@ scope -> ("internal" | "public") {%
      }
 %}
 
-typeProperty -> ("schema-def" | "lens-def" | "container") {%
+typeProperty -> ("schema-def" | "lens-def" | "container-def" | "metadata" ) {%
       function(data, location) {
           return {
               type: 'typeProperty',
@@ -71,7 +71,7 @@ typeProperty -> ("schema-def" | "lens-def" | "container") {%
       }
    %}
 
-assignmentProperty -> (("schema" | "id" | "name") _ "=" _ (sqstring | dqstring)) {%
+assignmentProperty -> (("schema" | "id" | "name" | "author" | "version") _ "=" _ (sqstring | dqstring)) {%
        function(data, location) {
            return {
                type: 'assignmentProperty',

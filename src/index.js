@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import program from 'commander'
 import {parseMarkdown} from "./parser/MarkdownParser";
 
@@ -9,10 +11,8 @@ program
 
 const file = program.args[0]
 
+if (!file) throw new Error("No file specified")
+
 parseMarkdown(file, (description, errors)=> {
-	if (description) {
-		console.log(JSON.stringify(description))
-	} else {
-		console.error(errors)
-	}
+	console.log(JSON.stringify({description, errors}))
 })
