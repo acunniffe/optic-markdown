@@ -29,7 +29,7 @@ function compileGrammar(sourceCode) {
 
 function testGrammarType(type) {
 	const rawOpticGrammar = fs.readFileSync('src/parser/grammar/optic-md-comment.ne', 'utf8')
-	return compileGrammar(rawOpticGrammar.replace('main -> (annotation | annotationPair | dependencies) {%', `main -> (${type}) {%`))
+	return compileGrammar(rawOpticGrammar.replace('main -> (annotation | annotationPair | dependencies | metadata) {%', `main -> (${type}) {%`))
 }
 
 describe('markdown comment grammar', () => {
@@ -105,13 +105,12 @@ describe('markdown comment grammar', () => {
 		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 		parser.feed("<!-- metadata \n name='Test' \n author='author' version='0.1.1' -->")
 
-		const expected = { type: 'annotation',
+		const expected = { type: 'metadataAnnotation',
 			properties:
-				[ { type: 'typeProperty', value: 'metadata', location: 5 },
-					{ type: 'assignmentProperty',
-						key: 'name',
-						value: 'Test',
-						location: 16 },
+				[ { type: 'assignmentProperty',
+					key: 'name',
+					value: 'Test',
+					location: 16 },
 					{ type: 'assignmentProperty',
 						key: 'author',
 						value: 'author',

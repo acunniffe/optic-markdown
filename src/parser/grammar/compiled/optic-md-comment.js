@@ -136,6 +136,7 @@ var grammar = {
     {"name": "main$subexpression$1", "symbols": ["annotation"]},
     {"name": "main$subexpression$1", "symbols": ["annotationPair"]},
     {"name": "main$subexpression$1", "symbols": ["dependencies"]},
+    {"name": "main$subexpression$1", "symbols": ["metadata"]},
     {"name": "main", "symbols": ["main$subexpression$1"], "postprocess": 
         function (data) {
             return data[0][0]
@@ -179,6 +180,17 @@ var grammar = {
             };
         }
          },
+    {"name": "metadata$string$1", "symbols": [{"literal":"<"}, {"literal":"!"}, {"literal":"-"}, {"literal":"-"}, {"literal":" "}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "metadata$string$2", "symbols": [{"literal":"m"}, {"literal":"e"}, {"literal":"t"}, {"literal":"a"}, {"literal":"d"}, {"literal":"a"}, {"literal":"t"}, {"literal":"a"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "metadata$string$3", "symbols": [{"literal":"-"}, {"literal":"-"}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "metadata", "symbols": ["metadata$string$1", "_", "metadata$string$2", "__", "annotationContent", "__", "metadata$string$3"], "postprocess": 
+        function(data) {
+            return {
+                type: 'metadataAnnotation',
+                properties: data[4]
+            };
+        }
+          },
     {"name": "packageRef$ebnf$1$subexpression$1", "symbols": [/[\da-z-><\+]/]},
     {"name": "packageRef$ebnf$1", "symbols": ["packageRef$ebnf$1$subexpression$1"]},
     {"name": "packageRef$ebnf$1$subexpression$2", "symbols": [/[\da-z-><\+]/]},
@@ -221,8 +233,6 @@ var grammar = {
     {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$2"]},
     {"name": "typeProperty$subexpression$1$string$3", "symbols": [{"literal":"c"}, {"literal":"o"}, {"literal":"n"}, {"literal":"t"}, {"literal":"a"}, {"literal":"i"}, {"literal":"n"}, {"literal":"e"}, {"literal":"r"}, {"literal":"-"}, {"literal":"d"}, {"literal":"e"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$3"]},
-    {"name": "typeProperty$subexpression$1$string$4", "symbols": [{"literal":"m"}, {"literal":"e"}, {"literal":"t"}, {"literal":"a"}, {"literal":"d"}, {"literal":"a"}, {"literal":"t"}, {"literal":"a"}], "postprocess": function joiner(d) {return d.join('');}},
-    {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$4"]},
     {"name": "typeProperty", "symbols": ["typeProperty$subexpression$1"], "postprocess": 
         function(data, location) {
             return {

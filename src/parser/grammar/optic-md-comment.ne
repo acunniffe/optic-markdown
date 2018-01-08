@@ -2,7 +2,7 @@
 @builtin "number.ne"
 @builtin "whitespace.ne"
 
-main -> (annotation | annotationPair | dependencies) {%
+main -> (annotation | annotationPair | dependencies | metadata) {%
     function (data) {
         return data[0][0]
     }
@@ -37,6 +37,15 @@ dependencies -> "<!-- " _ "DEPENDENCIES"  (__ packageRef):* __ "-->" {%
     }
  %}
 
+ metadata -> "<!-- " _ "metadata" __ annotationContent __ "-->" {%
+     function(data) {
+         return {
+             type: 'metadataAnnotation',
+             properties: data[4]
+         };
+     }
+  %}
+
 packageRef -> ([\da-z-><\+]):+ "@" [A-Za-z0-9\.\+\*-]:+ {% function(d) {
     return d[0].join("") + d[1] + d[2].join("")
   }
@@ -61,7 +70,7 @@ scope -> ("internal" | "public") {%
      }
 %}
 
-typeProperty -> ("schema-def" | "lens-def" | "container-def" | "metadata" ) {%
+typeProperty -> ("schema-def" | "lens-def" | "container-def" ) {%
       function(data, location) {
           return {
               type: 'typeProperty',

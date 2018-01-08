@@ -1,5 +1,6 @@
 import deepFreeze from 'deep-freeze'
 import {MissingCodeBlock, NoValidDefinitionType, ParseError} from "../Errors";
+import {getAssignmentProperty} from "../helpers/AST";
 export class Annotation {
 
 	constructor(type, properties = [], codeBlock) {
@@ -31,10 +32,7 @@ export class Annotation {
 	}
 
 	getProperty(key) {
-		const obj = this.properties.find(i=> i.type === 'assignmentProperty' && i.key === key)
-		if (obj) {
-			return obj.value
-		}
+		return getAssignmentProperty(key, this.properties)
 	}
 
 	getPropertiesOfType(type) {

@@ -1,3 +1,5 @@
+<!-- metadata name="imports" author="aidan" version="0.1.0" -->
+
 # Importing a Module in Javascript
 
 Like most other languages, Javascript has built in conventions for importing modules. Modules can be imported from another location on disk using a relative path. They can also be referenced by their name if they were included using a package manager like NPM. 

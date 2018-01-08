@@ -6,9 +6,7 @@ export function parseMarkdown(filePath, callback) {
 	parse(filePath, (results, errors1) => {
 		if (results) {
 			processAnnotations(results, (description, errors2) => {
-				validateDescription(description, errors1.concat(errors2), (description, errors3) => {
-					callback(description, errors3)
-				})
+				callback(description, errors1.concat(errors2))
 			})
 		} else {
 			callback(null, errors1)

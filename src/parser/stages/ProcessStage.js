@@ -6,6 +6,7 @@ import {Finder} from "../../sdk-objects/lenses/Finder";
 import {Component} from "../../sdk-objects/lenses/Component";
 import {Lens} from "../../sdk-objects/lenses/Lens";
 import {Metadata} from "../../sdk-objects/Metadata";
+import {getAssignmentProperty} from "../../helpers/AST";
 export function processAnnotations(rawAnnotations, callback) {
 
 	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock))
@@ -18,9 +19,13 @@ export function processAnnotations(rawAnnotations, callback) {
 	})()
 
 	const metadataAnnotation = (()=> {
-		const annotation = sdkAnnotations.find(i=> i.type === 'annotation' && i.definitionType === 'metadata')
+		const annotation = rawAnnotations.find(i=> i.type === 'metadataAnnotation')
+
 		if (annotation) {
-			new Metadata(annotation.getProperty('author'), annotation.getProperty('name'), annotation.getProperty('version'))
+			return new Metadata(
+				getAssignmentProperty('author', annotation.properties),
+				getAssignmentProperty('name', annotation.properties),
+				getAssignmentProperty('version', annotation.properties))
 		} else {
 			return Metadata.empty
 		}
