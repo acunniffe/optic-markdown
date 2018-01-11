@@ -108,6 +108,24 @@ variableProperty -> (sqstring | dqstring) _ ("*" | "^") {%
    }
 %}
 
+mapSchemaProperty -> ("mapUnique" | "map") _ "(" _ (sqstring | dqstring) _ ")" _ "=>" _ memberExpression {%
+
+   function(data, location) {
+
+       const unique = data[0][0] === 'mapUnique'
+       const schema = data[4][0]
+
+       return {
+           type: 'mapSchemaProperty',
+           unique,
+           schema,
+           location,
+           propertyPath: data[10]
+       };
+   }
+
+%}
+
 stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".containing") (null | "[" _ int _ "]") _ "=>" _ (memberExpression) {%
       function(data, location) {
           const rule = (data[1][0]) ? data[1][0].substring(1) : 'entire'
@@ -123,7 +141,7 @@ stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".contai
               location
           };
       }
-   %}
+%}
 
 rangeFinder -> int "-" int _ "=>" _ (memberExpression) {%
       function(data, location) {
@@ -158,6 +176,7 @@ value ->
   | assignmentProperty
   | finderProperty
   | variableProperty
+  | mapSchemaProperty
 
 @{%
 

@@ -153,7 +153,7 @@ describe('markdown comment grammar', () => {
 
 	})
 
-	describe.only('variable properties', ()=> {
+	describe('variable properties', ()=> {
 
 		it('for in self', ()=> {
 			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('variableProperty')));
@@ -178,6 +178,46 @@ describe('markdown comment grammar', () => {
 				token: 'variable',
 				in: 'scope',
 				location: 0
+			}
+
+			assert(equals(expected, parser.results[0]))
+		})
+
+	})
+
+	describe('map schema properties', ()=> {
+
+		it('for basic map', ()=> {
+			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('mapSchemaProperty')));
+			parser.feed("map('parameter') => this.me.you")
+
+			const expected = {
+				type: 'mapSchemaProperty',
+				unique: false,
+				schema: 'parameter',
+				location: 0,
+				propertyPath: {
+					type: 'memberExpression',
+					keys: [ 'this', 'me', 'you' ]
+				}
+			}
+
+			assert(equals(expected, parser.results[0]))
+		})
+
+		it('for unique map', ()=> {
+			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('mapSchemaProperty')));
+			parser.feed("mapUnique('parameter') => this.me.you")
+
+			const expected = {
+				type: 'mapSchemaProperty',
+				unique: true,
+				schema: 'parameter',
+				location: 0,
+				propertyPath: {
+					type: 'memberExpression',
+					keys: [ 'this', 'me', 'you' ]
+				}
 			}
 
 			assert(equals(expected, parser.results[0]))

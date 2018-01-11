@@ -1,4 +1,3 @@
-import {validateLens} from "../../validation/ValidateLens";
 import {RequiredFieldNotSetInLens} from "../../Errors";
 import {DefaultContext} from "../../parser/stages/ProcessStage";
 
@@ -15,27 +14,17 @@ export class Lens {
 		this.variables = variables
 	}
 
-	errors(context) {
+	errors() {
 
 		const errors = []
 
-		if (context) {
-			const validation = validateLens(this, context.schemas)
-			if (!validation.result) {
-
-				if (validation.difference) {
-					validation.difference.forEach(i => errors.push(RequiredFieldNotSetInLens(i)))
-				} else {
-					errors.push(validation.error)
-				}
-			}
-		}
+		//@todo impl
 
 		return errors
 	}
 
-	isValid(context) {
-		return !this.errors(context).length
+	isValid() {
+		return !this.errors().length
 	}
 
 }

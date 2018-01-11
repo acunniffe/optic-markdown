@@ -71,6 +71,15 @@ export function InvalidFinder(msg, level = 'error') {
 	}
 }
 
+export function InvalidComponent(msg, level = 'error') {
+	return {
+		level,
+		type: 'InvalidComponent',
+		message: msg,
+		isError: true
+	}
+}
+
 export function RequiredFieldNotSetInLens(field, level = 'error') {
 	return {
 		level,

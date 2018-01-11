@@ -79,14 +79,18 @@ export function annotationToSdkObject(annotation) {
 
 			const codeComponents = annotation.getPropertiesOfType('finderProperty').map(f=> {
 				const finder = new Finder(f)
-				return new Component('code', finder, f.propertyPath.keys)
+				return new Component({type: 'code', finder, propertyPath: f.propertyPath.keys})
+			})
+
+			const schemaComponents = annotation.getPropertiesOfType('mapSchemaProperty').map(m=> {
+				return new Component({type: 'schema', propertyPath: m.propertyPath.keys, schema: m.schema, unique: m.unique})
 			})
 
 			const variableComponents = annotation.getPropertiesOfType('variableProperty').map(v=> {
 				return new Variable(v)
 			})
 
-			return new Lens(name, schema, snippet, annotation.scope, codeComponents, [], variableComponents)
+			return new Lens(name, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents)
 	}
 
 }
