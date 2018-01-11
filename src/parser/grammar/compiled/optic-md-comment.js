@@ -252,6 +252,8 @@ var grammar = {
     {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$4"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$1$string$5", "symbols": [{"literal":"v"}, {"literal":"e"}, {"literal":"r"}, {"literal":"s"}, {"literal":"i"}, {"literal":"o"}, {"literal":"n"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$5"]},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1$string$6", "symbols": [{"literal":"l"}, {"literal":"a"}, {"literal":"n"}, {"literal":"g"}, {"literal":"u"}, {"literal":"a"}, {"literal":"g"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$6"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["sqstring"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["dqstring"]},
     {"name": "assignmentProperty$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1", "_", {"literal":"="}, "_", "assignmentProperty$subexpression$1$subexpression$2"]},
@@ -264,12 +266,26 @@ var grammar = {
                 location
             };
         }
-            },
+        },
     {"name": "finderProperty$subexpression$1", "symbols": ["stringFinder"]},
     {"name": "finderProperty$subexpression$1", "symbols": ["rangeFinder"]},
     {"name": "finderProperty", "symbols": ["finderProperty$subexpression$1"], "postprocess": 
         function(data) {
             return data[0][0]
+        }
+        },
+    {"name": "variableProperty$subexpression$1", "symbols": ["sqstring"]},
+    {"name": "variableProperty$subexpression$1", "symbols": ["dqstring"]},
+    {"name": "variableProperty$subexpression$2", "symbols": [{"literal":"*"}]},
+    {"name": "variableProperty$subexpression$2", "symbols": [{"literal":"^"}]},
+    {"name": "variableProperty", "symbols": ["variableProperty$subexpression$1", "_", "variableProperty$subexpression$2"], "postprocess": 
+        function(data, location) {
+            return {
+                type: 'variableProperty',
+                token: data[0][0],
+                in: (data[2][0] === "*" ? 'self' : 'scope'),
+                location
+            };
         }
         },
     {"name": "stringFinder$subexpression$1", "symbols": ["sqstring"]},
@@ -336,7 +352,8 @@ var grammar = {
     {"name": "value", "symbols": ["typeProperty"]},
     {"name": "value", "symbols": ["scope"]},
     {"name": "value", "symbols": ["assignmentProperty"]},
-    {"name": "value", "symbols": ["finderProperty"]}
+    {"name": "value", "symbols": ["finderProperty"]},
+    {"name": "value", "symbols": ["variableProperty"]}
 ]
   , ParserStart: "main"
 }

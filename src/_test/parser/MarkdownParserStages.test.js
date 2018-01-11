@@ -92,12 +92,19 @@ describe('markdown', () => {
 							location: 19
 						},
 						{
+							type: 'assignmentProperty',
+							key: 'version',
+							value: 'es6'
+						},
+						{
 							type: 'finderProperty',
 							finderType: 'stringFinder',
 							string: 'definedAs',
 							rule: 'entire',
 							occurrence: 0,
-							propertyPath: ['definedAs'],
+							propertyPath: {
+								keys: ['definedAs']
+							},
 							location: 44
 						},
 						{
@@ -106,7 +113,9 @@ describe('markdown', () => {
 							string: 'pathTo',
 							rule: 'entire',
 							occurrence: 0,
-							propertyPath: ['pathTo'],
+							propertyPath: {
+								keys: ['pathTo']
+							},
 							location: 74
 						}],
 				codeBlock: 'const definedAs = require(\'pathTo\')',
@@ -117,7 +126,7 @@ describe('markdown', () => {
 				assert(!errors.length)
 				const lens = description.lenses[0]
 				assert(lens instanceof Lens)
-				assert(equals(JSON.parse(JSON.stringify(lens)), {"schema":"test@1.1.1","block":"const definedAs = require('pathTo')","scope":"public","components":[{"type":"code","finder":{"finderType":"stringFinder","string":"pathTo","rule":"entire","occurrence":0},"propertyPath":["pathTo"]},{"type":"code","finder":{"finderType":"stringFinder","string":"definedAs","rule":"entire","occurrence":0},"propertyPath":["definedAs"]}],"rules":[]}))
+				assert(equals(JSON.parse(JSON.stringify(lens)), {"schema":"test@1.1.1","snippet":{"language":"javascript","block":"const definedAs = require('pathTo')","version":"es6"},"scope":"public","components":[{"type":"code","finder":{"finderType":"stringFinder","string":"pathTo","rule":"entire","occurrence":0},"propertyPath":["pathTo"]},{"type":"code","finder":{"finderType":"stringFinder","string":"definedAs","rule":"entire","occurrence":0},"propertyPath":["definedAs"]}],"rules":[]}))
 				done()
 			})
 

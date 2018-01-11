@@ -3,13 +3,14 @@ import {MissingCodeBlock, NoValidDefinitionType, ParseError} from "../Errors";
 import {getAssignmentProperty} from "../helpers/AST";
 export class Annotation {
 
-	constructor(type, properties = [], codeBlock) {
+	constructor(type, properties = [], codeBlock, language) {
 		this.annotationType = type
 
 		//reversed so the final definition is the one that is found first by all the native array methods
 		this.properties = properties.reverse()
 
 		this.codeBlock = codeBlock
+		this.language = language
 
 		//find the definition type (if any) and assign to a value
 		this.definitionType = (()=> {

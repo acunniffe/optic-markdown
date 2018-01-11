@@ -3,7 +3,7 @@ import {InvalidFinder} from "../../Errors";
 export class Finder {
 	constructor(options) {
 
-		this.finderType = options.finderType
+		this.type = options.finderType
 
 		//string finder props
 		this.string = options.string

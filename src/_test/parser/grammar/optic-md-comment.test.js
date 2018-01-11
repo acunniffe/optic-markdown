@@ -153,6 +153,38 @@ describe('markdown comment grammar', () => {
 
 	})
 
+	describe.only('variable properties', ()=> {
+
+		it('for in self', ()=> {
+			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('variableProperty')));
+			parser.feed('"variable" *')
+
+			const expected = {
+				type: 'variableProperty',
+				token: 'variable',
+				in: 'self',
+				location: 0
+			}
+
+			assert(equals(expected, parser.results[0]))
+		})
+
+		it('for in scope ', ()=> {
+			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('variableProperty')));
+			parser.feed('"variable" ^')
+
+			const expected = {
+				type: 'variableProperty',
+				token: 'variable',
+				in: 'scope',
+				location: 0
+			}
+
+			assert(equals(expected, parser.results[0]))
+		})
+
+	})
+
 	describe('finder properties', ()=> {
 
 		it('string finders', ()=> {

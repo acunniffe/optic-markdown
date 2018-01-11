@@ -32,7 +32,8 @@ You can import code using RequireJS like so where `pathTo` is the path or name o
      name="import using require"
      schema="js-import" 
      "definedAs" => definedAs
-     "pathTo".containing => pathTo 
+     "pathTo".containing => pathTo
+     "definedAs"*
 --> 
 ```javascript
 const definedAs = require('pathTo')

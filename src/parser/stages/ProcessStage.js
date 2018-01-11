@@ -7,9 +7,11 @@ import {Component} from "../../sdk-objects/lenses/Component";
 import {Lens} from "../../sdk-objects/lenses/Lens";
 import {Metadata} from "../../sdk-objects/Metadata";
 import {getAssignmentProperty} from "../../helpers/AST";
+import {Snippet} from "../../sdk-objects/lenses/Snippet";
+import {Variable} from "../../sdk-objects/lenses/Variable";
 export function processAnnotations(rawAnnotations, callback) {
 
-	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock))
+	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock, i.language))
 
 	const dependenciesAnnotation = (()=> {
 		const allDependencyLists = rawAnnotations.filter(i=> i.type === 'dependenciesAnnotation').map(i=> i.dependencies)
@@ -70,12 +72,21 @@ export function annotationToSdkObject(annotation) {
 			const name = annotation.getProperty('name')
 			const schema = annotation.getProperty('schema')
 
+			const language = annotation.language
+			const version = annotation.getProperty('version')
+
+			const snippet = new Snippet(annotation.codeBlock, language, version)
+
 			const codeComponents = annotation.getPropertiesOfType('finderProperty').map(f=> {
 				const finder = new Finder(f)
-				return new Component('code', finder, f.propertyPath)
+				return new Component('code', finder, f.propertyPath.keys)
 			})
 
-			return new Lens(name, schema, annotation.codeBlock, annotation.scope, codeComponents, [])
+			const variableComponents = annotation.getPropertiesOfType('variableProperty').map(v=> {
+				return new Variable(v)
+			})
+
+			return new Lens(name, schema, snippet, annotation.scope, codeComponents, [], variableComponents)
 	}
 
 }

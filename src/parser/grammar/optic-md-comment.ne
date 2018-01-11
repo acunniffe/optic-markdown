@@ -80,21 +80,32 @@ typeProperty -> ("schema-def" | "lens-def" | "container-def" ) {%
       }
    %}
 
-assignmentProperty -> (("schema" | "id" | "name" | "author" | "version") _ "=" _ (sqstring | dqstring)) {%
-       function(data, location) {
-           return {
-               type: 'assignmentProperty',
-               key: data[0][0][0],
-               value: data[0][4][0],
-               location
-           };
-       }
-    %}
+assignmentProperty -> (("schema" | "id" | "name" | "author" | "version" | "language") _ "=" _ (sqstring | dqstring)) {%
+   function(data, location) {
+       return {
+           type: 'assignmentProperty',
+           key: data[0][0][0],
+           value: data[0][4][0],
+           location
+       };
+   }
+%}
 
 finderProperty -> (stringFinder | rangeFinder) {%
     function(data) {
         return data[0][0]
     }
+%}
+
+variableProperty -> (sqstring | dqstring) _ ("*" | "^") {%
+   function(data, location) {
+       return {
+           type: 'variableProperty',
+           token: data[0][0],
+           in: (data[2][0] === "*" ? 'self' : 'scope'),
+           location
+       };
+   }
 %}
 
 stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".containing") (null | "[" _ int _ "]") _ "=>" _ (memberExpression) {%
@@ -146,6 +157,7 @@ value ->
   | scope
   | assignmentProperty
   | finderProperty
+  | variableProperty
 
 @{%
 
