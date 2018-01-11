@@ -241,7 +241,18 @@ var grammar = {
                 location
             };
         }
-           },
+        },
+    {"name": "assignTo$subexpression$1$string$1", "symbols": [{"literal":"="}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "assignTo$subexpression$1", "symbols": ["assignTo$subexpression$1$string$1"]},
+    {"name": "assignTo$subexpression$1$string$2", "symbols": [{"literal":"<"}, {"literal":"="}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "assignTo$subexpression$1", "symbols": ["assignTo$subexpression$1$string$2"]},
+    {"name": "assignTo", "symbols": ["assignTo$subexpression$1"], "postprocess": 
+        
+        function (data, location) {
+            return data[0][0] === '<=>'
+        }
+        
+        },
     {"name": "assignmentProperty$subexpression$1$subexpression$1$string$1", "symbols": [{"literal":"s"}, {"literal":"c"}, {"literal":"h"}, {"literal":"e"}, {"literal":"m"}, {"literal":"a"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$1"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$1$string$2", "symbols": [{"literal":"i"}, {"literal":"d"}], "postprocess": function joiner(d) {return d.join('');}},
@@ -294,8 +305,7 @@ var grammar = {
     {"name": "mapSchemaProperty$subexpression$1", "symbols": ["mapSchemaProperty$subexpression$1$string$2"]},
     {"name": "mapSchemaProperty$subexpression$2", "symbols": ["sqstring"]},
     {"name": "mapSchemaProperty$subexpression$2", "symbols": ["dqstring"]},
-    {"name": "mapSchemaProperty$string$1", "symbols": [{"literal":"="}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
-    {"name": "mapSchemaProperty", "symbols": ["mapSchemaProperty$subexpression$1", "_", {"literal":"("}, "_", "mapSchemaProperty$subexpression$2", "_", {"literal":")"}, "_", "mapSchemaProperty$string$1", "_", "memberExpression"], "postprocess": 
+    {"name": "mapSchemaProperty", "symbols": ["mapSchemaProperty$subexpression$1", "_", {"literal":"("}, "_", "mapSchemaProperty$subexpression$2", "_", {"literal":")"}, "_", "assignTo", "_", "memberExpression"], "postprocess": 
         
         function(data, location) {
         
@@ -307,6 +317,7 @@ var grammar = {
                 unique,
                 schema,
                 location,
+                editable: data[8],
                 propertyPath: data[10]
             };
         }
@@ -323,9 +334,8 @@ var grammar = {
     {"name": "stringFinder$subexpression$2", "symbols": ["stringFinder$subexpression$2$string$3"]},
     {"name": "stringFinder$subexpression$3", "symbols": []},
     {"name": "stringFinder$subexpression$3", "symbols": [{"literal":"["}, "_", "int", "_", {"literal":"]"}]},
-    {"name": "stringFinder$string$1", "symbols": [{"literal":"="}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "stringFinder$subexpression$4", "symbols": ["memberExpression"]},
-    {"name": "stringFinder", "symbols": ["stringFinder$subexpression$1", "stringFinder$subexpression$2", "stringFinder$subexpression$3", "_", "stringFinder$string$1", "_", "stringFinder$subexpression$4"], "postprocess": 
+    {"name": "stringFinder", "symbols": ["stringFinder$subexpression$1", "stringFinder$subexpression$2", "stringFinder$subexpression$3", "_", "assignTo", "_", "stringFinder$subexpression$4"], "postprocess": 
         function(data, location) {
             const rule = (data[1][0]) ? data[1][0].substring(1) : 'entire'
             const occurrence = (data[2][2]) ? data[2][2] : 0
@@ -336,18 +346,20 @@ var grammar = {
                 string: data[0][0],
                 rule: rule,
                 occurrence: occurrence,
+                editable: data[4],
                 propertyPath: data[6][0],
                 location
             };
         }
         },
-    {"name": "rangeFinder$string$1", "symbols": [{"literal":"="}, {"literal":">"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "rangeFinder$subexpression$1", "symbols": ["memberExpression"]},
-    {"name": "rangeFinder", "symbols": ["int", {"literal":"-"}, "int", "_", "rangeFinder$string$1", "_", "rangeFinder$subexpression$1"], "postprocess": 
+    {"name": "rangeFinder", "symbols": ["int", {"literal":"-"}, "int", "_", "assignTo", "_", "rangeFinder$subexpression$1"], "postprocess": 
         function(data, location) {
             return {
                 type: 'finderProperty',
                 finderType: 'rangeFinder',
+                editable: data[4],
+                propertyPath: data[6][0],
                 start: data[0],
                 end: data[2],
                 location

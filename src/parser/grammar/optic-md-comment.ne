@@ -78,7 +78,15 @@ typeProperty -> ("schema-def" | "lens-def" | "container-def" ) {%
               location
           };
       }
-   %}
+%}
+
+assignTo -> ("=>" | "<=>") {%
+
+    function (data, location) {
+        return data[0][0] === '<=>'
+    }
+
+%}
 
 assignmentProperty -> (("schema" | "id" | "name" | "author" | "version" | "language") _ "=" _ (sqstring | dqstring)) {%
    function(data, location) {
@@ -108,7 +116,7 @@ variableProperty -> (sqstring | dqstring) _ ("*" | "^") {%
    }
 %}
 
-mapSchemaProperty -> ("mapUnique" | "map") _ "(" _ (sqstring | dqstring) _ ")" _ "=>" _ memberExpression {%
+mapSchemaProperty -> ("mapUnique" | "map") _ "(" _ (sqstring | dqstring) _ ")" _ assignTo _ memberExpression {%
 
    function(data, location) {
 
@@ -120,13 +128,14 @@ mapSchemaProperty -> ("mapUnique" | "map") _ "(" _ (sqstring | dqstring) _ ")" _
            unique,
            schema,
            location,
+           editable: data[8],
            propertyPath: data[10]
        };
    }
 
 %}
 
-stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".containing") (null | "[" _ int _ "]") _ "=>" _ (memberExpression) {%
+stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".containing") (null | "[" _ int _ "]") _ assignTo _ (memberExpression) {%
       function(data, location) {
           const rule = (data[1][0]) ? data[1][0].substring(1) : 'entire'
           const occurrence = (data[2][2]) ? data[2][2] : 0
@@ -137,17 +146,20 @@ stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".contai
               string: data[0][0],
               rule: rule,
               occurrence: occurrence,
+              editable: data[4],
               propertyPath: data[6][0],
               location
           };
       }
 %}
 
-rangeFinder -> int "-" int _ "=>" _ (memberExpression) {%
+rangeFinder -> int "-" int _ assignTo _ (memberExpression) {%
       function(data, location) {
           return {
               type: 'finderProperty',
               finderType: 'rangeFinder',
+              editable: data[4],
+              propertyPath: data[6][0],
               start: data[0],
               end: data[2],
               location
