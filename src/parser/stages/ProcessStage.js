@@ -46,6 +46,7 @@ export function processAnnotations(rawAnnotations, callback) {
 	const description = new Description(metadataAnnotation, dependenciesAnnotation,
 		validSDKObjects.filter(i=> i instanceof Schema),
 		validSDKObjects.filter(i=> i instanceof Lens),
+		validSDKObjects.filter(i=> i instanceof Container),
 	)
 
 	callback(description, errors)
@@ -97,10 +98,11 @@ export function annotationToSdkObject(annotation) {
 			})
 
 			const subcontainers = annotation.getPropertiesOfType("containerProperty").map(c => {
+				console.log(c.properties)
 				const pulls = c.properties.filter(i => i.type === 'pullProperty').map(i => i.schema)
 
 				const childrenRule = (() => {
-					const property = c.properties.reverse().find(i => i.type === 'childrenRuleProperty')
+					const property = c.properties.find(i => i.type === 'childrenRuleProperty')
 					if (property) {
 						return property.rule
 					} else {
@@ -134,7 +136,7 @@ export function annotationToSdkObject(annotation) {
 				return m.schema
 			})
 
-			const childrenRule = annotation.getPropertiesOfType('childrenRuleProperty')[0] || 'any'
+			const childrenRule = (annotation.getPropertiesOfType('childrenRuleProperty')[0] || {}).rule || 'any'
 
 			const schemaComponents = annotation.getPropertiesOfType('mapSchemaProperty').map(m => {
 				return new Component({

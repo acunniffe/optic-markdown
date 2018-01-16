@@ -7,6 +7,7 @@ import grammar from "../../parser/grammar/compiled/optic-md-comment";
 import equals from 'deep-equal'
 import nearley from 'nearley'
 import {Lens} from "../../sdk-objects/lenses/Lens";
+import {Container} from "../../sdk-objects/Container";
 
 describe('markdown', () => {
 
@@ -84,7 +85,8 @@ describe('markdown', () => {
 			const lensDef = {
 				type: 'annotationPair',
 				properties:
-					[{type: 'typeProperty', value: 'lens-def', location: 5},
+					[
+						{type: 'typeProperty', value: 'lens-def', location: 5},
 						{
 							type: 'assignmentProperty',
 							key: 'schema',
@@ -117,6 +119,29 @@ describe('markdown', () => {
 								keys: ['pathTo']
 							},
 							location: 74
+						},
+						{
+							type: 'containerProperty',
+							name: 'container name',
+							subcontainer: true,
+							properties:
+								[{
+									type: 'assignmentProperty',
+									key: 'id',
+									value: 'me',
+									location: 21
+								},
+									{
+										type: 'pullProperty',
+										schema: 'test:package/schema',
+										location: 31
+									},
+									{
+										type: 'childrenRuleProperty',
+										rule: 'same-plus-any-order',
+										location: 58
+									}],
+							location: 0
 						}],
 				codeBlock: 'const definedAs = require(\'pathTo\')',
 				language: 'javascript'
@@ -126,10 +151,78 @@ describe('markdown', () => {
 				assert(!errors.length)
 				const lens = description.lenses[0]
 				assert(lens instanceof Lens)
-				assert(equals(JSON.parse(JSON.stringify(lens)), {"schema":"test@1.1.1","snippet":{"language":"javascript","block":"const definedAs = require('pathTo')","version":"es6"},"scope":"public","components":[{"type":"code","finder":{"type":"stringFinder","string":"pathTo","rule":"entire","occurrence":0},"propertyPath":["pathTo"]},{"type":"code","finder":{"type":"stringFinder","string":"definedAs","rule":"entire","occurrence":0},"propertyPath":["definedAs"]}],"rules":[], "variables": [], "subcontainers": []}))
+				// console.log(JSON.stringify(lens))
+				assert(equals(JSON.parse(JSON.stringify(lens)), {
+					"schema": "test@1.1.1",
+					"snippet": {
+						"language": "javascript",
+						"block": "const definedAs = require('pathTo')",
+						"version": "es6"
+					},
+					"scope": "public",
+					"components": [{
+						"type": "code",
+						"finder": {"type": "stringFinder", "string": "pathTo", "rule": "entire", "occurrence": 0},
+						"propertyPath": ["pathTo"]
+					}, {
+						"type": "code",
+						"finder": {"type": "stringFinder", "string": "definedAs", "rule": "entire", "occurrence": 0},
+						"propertyPath": ["definedAs"]
+					}],
+					"rules": [],
+					"variables": [],
+					"subcontainers": [{
+						"name": "container name",
+						"subcontainer": true,
+						"pulls": ["test:package/schema"],
+						"childrenRule": "same-plus-any-order",
+						"schemaComponents": []
+					}]
+				}))
 				done()
 			})
 
+		})
+
+	})
+
+	it('can process a container-def', (done) => {
+
+		const containerDef = {
+			type: 'annotationPair',
+			properties:
+				[
+					{type: 'typeProperty', value: 'container-def', location: 5},
+					{
+						type: 'pullProperty',
+						schema: 'test:package/schema',
+						location: 31
+					},
+					{
+						type: 'childrenRuleProperty',
+						rule: 'same-plus-any-order',
+						location: 58
+					}
+				],
+			codeBlock: 'const definedAs = require(\'pathTo\')',
+			language: 'javascript'
+		}
+
+		processAnnotations([containerDef], (description, errors) => {
+			assert(!errors.length)
+			const container = description.containers[0]
+			assert(container instanceof Container)
+
+			assert(equals(JSON.parse(JSON.stringify(container)),
+				{
+					"snippet": {"language": "javascript", "block": "const definedAs = require('pathTo')"},
+					"subcontainer": false,
+					"pulls": ["test:package/schema"],
+					"childrenRule": "same-plus-any-order",
+					"schemaComponents": []
+				}))
+
+			done()
 		})
 
 	})
