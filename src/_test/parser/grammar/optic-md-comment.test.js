@@ -172,6 +172,40 @@ describe('markdown comment grammar', () => {
 
 	})
 
+	describe('container properties', () => {
+		it('works for sub-containers', () => {
+
+			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('containerProperty')));
+			parser.feed('"container name" = ( id="me" \n pull "test:package/schema" same-plus-any-order )')
+
+			const expected = {
+				type: 'containerProperty',
+				name: 'container name',
+				subcontainer: true,
+				properties:
+					[{
+						type: 'assignmentProperty',
+						key: 'id',
+						value: 'me',
+						location: 21
+					},
+						{
+							type: 'pullProperty',
+							schema: 'test:package/schema',
+							location: 31
+						},
+						{
+							type: 'childrenRuleProperty',
+							rule: 'same-plus-any-order',
+							location: 58
+						}],
+				location: 0
+			}
+
+			assert(equals(expected, parser.results[0]))
+		})
+	})
+
 	describe('variable properties', () => {
 
 		it('for in self', () => {

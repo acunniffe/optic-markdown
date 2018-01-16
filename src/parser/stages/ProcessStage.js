@@ -9,6 +9,7 @@ import {Metadata} from "../../sdk-objects/Metadata";
 import {getAssignmentProperty} from "../../helpers/AST";
 import {Snippet} from "../../sdk-objects/lenses/Snippet";
 import {Variable} from "../../sdk-objects/lenses/Variable";
+import {Container} from "../../sdk-objects/Container";
 export function processAnnotations(rawAnnotations, callback) {
 
 	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock, i.language))
@@ -55,20 +56,20 @@ export function annotationToSdkObject(annotation) {
 
 	//@todo clean up error flow
 	switch (annotation.definitionType) {
-		case 'schema-def':
+		case 'schema-def': {
 
 			const id = annotation.getProperty('id')
 			let json;
 
 			try {
 				json = JSON.parse(annotation.codeBlock)
-			} catch(e) {
+			} catch (e) {
 				console.log(e)
 			}
 
 			return new Schema(id, json)
-
-		case 'lens-def':
+		}
+		case 'lens-def': {
 			const name = annotation.getProperty('name')
 			const schema = annotation.getProperty('schema')
 
@@ -77,22 +78,76 @@ export function annotationToSdkObject(annotation) {
 
 			const snippet = new Snippet(annotation.codeBlock, language, version)
 
-			const codeComponents = annotation.getPropertiesOfType('finderProperty').map(f=> {
+			const codeComponents = annotation.getPropertiesOfType('finderProperty').map(f => {
 				const finder = new Finder(f)
 				return new Component({type: 'code', finder, propertyPath: f.propertyPath.keys})
 			})
 
-			const schemaComponents = annotation.getPropertiesOfType('mapSchemaProperty').map(m=> {
-				return new Component({type: 'schema', propertyPath: m.propertyPath.keys, schema: m.schema, unique: m.unique})
+			const schemaComponents = annotation.getPropertiesOfType('mapSchemaProperty').map(m => {
+				return new Component({
+					type: 'schema',
+					propertyPath: m.propertyPath.keys,
+					schema: m.schema,
+					unique: m.unique
+				})
 			})
 
-			const variableComponents = annotation.getPropertiesOfType('variableProperty').map(v=> {
+			const variableComponents = annotation.getPropertiesOfType('variableProperty').map(v => {
 				return new Variable(v)
 			})
 
-			return new Lens(name, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents)
-	}
+			const subcontainers = annotation.getPropertiesOfType("containerProperty").map(c => {
+				const pulls = c.properties.filter(i => i.type === 'pullProperty').map(i => i.schema)
 
+				const childrenRule = (() => {
+					const property = c.properties.reverse().find(i => i.type === 'childrenRuleProperty')
+					if (property) {
+						return property.rule
+					} else {
+						return 'any'
+					}
+				})()
+
+				const schemaComponents = c.properties.filter(i => i.type === 'mapSchemaProperty').map(m => {
+					return new Component({
+						type: 'schema',
+						propertyPath: m.propertyPath.keys,
+						schema: m.schema,
+						unique: m.unique
+					})
+				})
+
+				return new Container(c.name, true, undefined, pulls, childrenRule, schemaComponents)
+			})
+
+			return new Lens(name, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers)
+		}
+		case 'container-def': {
+			const name = annotation.getProperty('name')
+
+			const language = annotation.language
+			const version = annotation.getProperty('version')
+
+			const snippet = new Snippet(annotation.codeBlock, language, version)
+
+			const pullProperties = annotation.getPropertiesOfType('pullProperty').map(m => {
+				return m.schema
+			})
+
+			const childrenRule = annotation.getPropertiesOfType('childrenRuleProperty')[0] || 'any'
+
+			const schemaComponents = annotation.getPropertiesOfType('mapSchemaProperty').map(m => {
+				return new Component({
+					type: 'schema',
+					propertyPath: m.propertyPath.keys,
+					schema: m.schema,
+					unique: m.unique
+				})
+			})
+
+			return new Container(name, false, snippet, pullProperties, childrenRule, schemaComponents)
+		}
+	}
 }
 
 export const DefaultContext = {schemas: []}

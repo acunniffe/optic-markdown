@@ -181,7 +181,6 @@ memberExpression -> keyName (_ "." _ keyName):* {%
 
 keyName -> ([a-zA-Z_]):+ {% function(d) { return d[0].join(""); } %}
 
-
 value ->
     typeProperty
   | scope
@@ -189,6 +188,44 @@ value ->
   | finderProperty
   | variableProperty
   | mapSchemaProperty
+  | pullProperty
+  | childrenRuleProperty
+
+
+
+containerProperty -> (sqstring | dqstring) _ "=" _ "(" _ containerContent _ ")" {%
+  function(data, location) {
+      return {
+          type: 'containerProperty',
+          name: data[0][0],
+          properties: data[6],
+          subcontainer: true,
+          location
+      };
+  }
+%}
+
+containerContent -> value (__ value {% extractValue %}):* {% extractArray %}
+
+pullProperty -> "pull" __ (sqstring | dqstring) {%
+    function(data, location) {
+      return {
+          type: 'pullProperty',
+          schema: data[2][0],
+          location
+      };
+    }
+%}
+
+childrenRuleProperty -> ("any" | "exact" | "same-plus" | "same-any-order" | "same-plus-any-order") {%
+    function(data, location) {
+      return {
+          type: 'childrenRuleProperty',
+          rule: data[0][0],
+          location
+      };
+    }
+%}
 
 @{%
 

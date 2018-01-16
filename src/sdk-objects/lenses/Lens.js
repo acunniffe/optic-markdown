@@ -3,7 +3,7 @@ import {DefaultContext} from "../../parser/stages/ProcessStage";
 
 export class Lens {
 
-	constructor(name, schema, snippet, scope, components, rules, variables) {
+	constructor(name, schema, snippet, scope, components, rules, variables, subcontainers) {
 
 		this.name = name
 		this.schema = schema
@@ -12,6 +12,7 @@ export class Lens {
 		this.components = components
 		this.rules = rules
 		this.variables = variables
+		this.subcontainers = subcontainers
 	}
 
 	errors() {

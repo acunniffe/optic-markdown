@@ -390,7 +390,57 @@ var grammar = {
     {"name": "value", "symbols": ["assignmentProperty"]},
     {"name": "value", "symbols": ["finderProperty"]},
     {"name": "value", "symbols": ["variableProperty"]},
-    {"name": "value", "symbols": ["mapSchemaProperty"]}
+    {"name": "value", "symbols": ["mapSchemaProperty"]},
+    {"name": "value", "symbols": ["pullProperty"]},
+    {"name": "value", "symbols": ["childrenRuleProperty"]},
+    {"name": "containerProperty$subexpression$1", "symbols": ["sqstring"]},
+    {"name": "containerProperty$subexpression$1", "symbols": ["dqstring"]},
+    {"name": "containerProperty", "symbols": ["containerProperty$subexpression$1", "_", {"literal":"="}, "_", {"literal":"("}, "_", "containerContent", "_", {"literal":")"}], "postprocess": 
+        function(data, location) {
+            return {
+                type: 'containerProperty',
+                name: data[0][0],
+                properties: data[6],
+                subcontainer: true,
+                location
+            };
+        }
+        },
+    {"name": "containerContent$ebnf$1", "symbols": []},
+    {"name": "containerContent$ebnf$1$subexpression$1", "symbols": ["__", "value"], "postprocess": extractValue},
+    {"name": "containerContent$ebnf$1", "symbols": ["containerContent$ebnf$1", "containerContent$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "containerContent", "symbols": ["value", "containerContent$ebnf$1"], "postprocess": extractArray},
+    {"name": "pullProperty$string$1", "symbols": [{"literal":"p"}, {"literal":"u"}, {"literal":"l"}, {"literal":"l"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "pullProperty$subexpression$1", "symbols": ["sqstring"]},
+    {"name": "pullProperty$subexpression$1", "symbols": ["dqstring"]},
+    {"name": "pullProperty", "symbols": ["pullProperty$string$1", "__", "pullProperty$subexpression$1"], "postprocess": 
+        function(data, location) {
+          return {
+              type: 'pullProperty',
+              schema: data[2][0],
+              location
+          };
+        }
+        },
+    {"name": "childrenRuleProperty$subexpression$1$string$1", "symbols": [{"literal":"a"}, {"literal":"n"}, {"literal":"y"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "childrenRuleProperty$subexpression$1", "symbols": ["childrenRuleProperty$subexpression$1$string$1"]},
+    {"name": "childrenRuleProperty$subexpression$1$string$2", "symbols": [{"literal":"e"}, {"literal":"x"}, {"literal":"a"}, {"literal":"c"}, {"literal":"t"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "childrenRuleProperty$subexpression$1", "symbols": ["childrenRuleProperty$subexpression$1$string$2"]},
+    {"name": "childrenRuleProperty$subexpression$1$string$3", "symbols": [{"literal":"s"}, {"literal":"a"}, {"literal":"m"}, {"literal":"e"}, {"literal":"-"}, {"literal":"p"}, {"literal":"l"}, {"literal":"u"}, {"literal":"s"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "childrenRuleProperty$subexpression$1", "symbols": ["childrenRuleProperty$subexpression$1$string$3"]},
+    {"name": "childrenRuleProperty$subexpression$1$string$4", "symbols": [{"literal":"s"}, {"literal":"a"}, {"literal":"m"}, {"literal":"e"}, {"literal":"-"}, {"literal":"a"}, {"literal":"n"}, {"literal":"y"}, {"literal":"-"}, {"literal":"o"}, {"literal":"r"}, {"literal":"d"}, {"literal":"e"}, {"literal":"r"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "childrenRuleProperty$subexpression$1", "symbols": ["childrenRuleProperty$subexpression$1$string$4"]},
+    {"name": "childrenRuleProperty$subexpression$1$string$5", "symbols": [{"literal":"s"}, {"literal":"a"}, {"literal":"m"}, {"literal":"e"}, {"literal":"-"}, {"literal":"p"}, {"literal":"l"}, {"literal":"u"}, {"literal":"s"}, {"literal":"-"}, {"literal":"a"}, {"literal":"n"}, {"literal":"y"}, {"literal":"-"}, {"literal":"o"}, {"literal":"r"}, {"literal":"d"}, {"literal":"e"}, {"literal":"r"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "childrenRuleProperty$subexpression$1", "symbols": ["childrenRuleProperty$subexpression$1$string$5"]},
+    {"name": "childrenRuleProperty", "symbols": ["childrenRuleProperty$subexpression$1"], "postprocess": 
+        function(data, location) {
+          return {
+              type: 'childrenRuleProperty',
+              rule: data[0][0],
+              location
+          };
+        }
+        }
 ]
   , ParserStart: "main"
 }
