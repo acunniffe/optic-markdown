@@ -190,6 +190,7 @@ value ->
   | mapSchemaProperty
   | pullProperty
   | childrenRuleProperty
+  | containerProperty
 
 
 

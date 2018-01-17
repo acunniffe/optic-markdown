@@ -393,6 +393,7 @@ var grammar = {
     {"name": "value", "symbols": ["mapSchemaProperty"]},
     {"name": "value", "symbols": ["pullProperty"]},
     {"name": "value", "symbols": ["childrenRuleProperty"]},
+    {"name": "value", "symbols": ["containerProperty"]},
     {"name": "containerProperty$subexpression$1", "symbols": ["sqstring"]},
     {"name": "containerProperty$subexpression$1", "symbols": ["dqstring"]},
     {"name": "containerProperty", "symbols": ["containerProperty$subexpression$1", "_", {"literal":"="}, "_", {"literal":"("}, "_", "containerContent", "_", {"literal":")"}], "postprocess": 

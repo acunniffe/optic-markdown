@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "npm run build && find ./lib -name '*.test.js' | xargs mocha -R spec",
-    "scratch": "npm run build && node ./lib/index.js examples/Importing-JS.md",
+    "scratch": "npm run build && node ./lib/index.js examples/ShowConfirmAlert.md",
     "build": "sh build.sh"
   },
   "bin": {
