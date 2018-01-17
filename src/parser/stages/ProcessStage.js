@@ -98,7 +98,6 @@ export function annotationToSdkObject(annotation) {
 			})
 
 			const subcontainers = annotation.getPropertiesOfType("containerProperty").map(c => {
-				console.log(c.properties)
 				const pulls = c.properties.filter(i => i.type === 'pullProperty').map(i => i.schema)
 
 				const childrenRule = (() => {
