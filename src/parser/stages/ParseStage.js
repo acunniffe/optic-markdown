@@ -14,29 +14,36 @@ export function parse(file, callback) {
 		if (err) {
 			errors.push(err)
 			return callback(undefined, errors)
+		} else {
+			parseString(contents, callback)
 		}
-
-		const annotations = contents.match(commentAnnotationRegex)
-
-		if (annotations === null) {
-			errors.push(NoAnnotationsFound(file))
-			return callback(undefined, errors)
-		}
-
-		const parsed = annotations.map(a=> {
-			try {
-				const parser = new nearley.Parser(compiledGrammar);
-				parser.feed(a);
-				return parser.results[0]
-			} catch (err) {
-				return ParseError(err)
-			}
-		})
-
-		const parseErrors = parsed.filter(i=> i.isError)
-		const parsedAnnotations = parsed.filter(i=> !i.isError)
-
-		callback(parsedAnnotations, errors.concat(parseErrors))
 	})
 
+}
+
+export function parseString(contents = "", callback) {
+
+	const errors = []
+
+	const annotations = contents.match(commentAnnotationRegex)
+
+	if (annotations === null) {
+		errors.push(NoAnnotationsFound())
+		return callback(undefined, errors)
+	}
+
+	const parsed = annotations.map(a=> {
+		try {
+			const parser = new nearley.Parser(compiledGrammar);
+			parser.feed(a);
+			return parser.results[0]
+		} catch (err) {
+			return ParseError(err)
+		}
+	})
+
+	const parseErrors = parsed.filter(i=> i.isError)
+	const parsedAnnotations = parsed.filter(i=> !i.isError)
+
+	callback(parsedAnnotations, errors.concat(parseErrors))
 }

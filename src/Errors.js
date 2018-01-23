@@ -8,11 +8,11 @@ export function ParseError(error = '', level = 'warn') {
 	}
 }
 
-export function NoAnnotationsFound(file, level = 'warn') {
+export function NoAnnotationsFound(level = 'warn') {
 	return {
 		level,
 		type: 'NoAnnotationsFound',
-		message: `No annotations found in ${file}. Ignore this warning if that was intended.`,
+		message: `No annotations found. Ignore this warning if that was intended.`,
 		isError: true
 	}
 }
