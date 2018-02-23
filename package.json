@@ -5,11 +5,12 @@
   "main": "lib/cli.js",
   "scripts": {
     "test": "npm run build && find ./lib -name '*.test.js' | xargs mocha -R spec",
-    "scratch": "npm run build && node ./lib/index.js examples/ShowConfirmAlert.md",
-    "build": "sh build.sh"
+    "scratch": "npm run build && node ./lib/cli.js examples/ShowConfirmAlert.md",
+    "build": "sh build.sh",
+    "build-for-core": "npm run build && webpack webpack.config.js"
   },
   "bin": {
-    "optic-md": "lib/index.js"
+    "optic-md": "lib/cli.js"
   },
   "license": "MIT",
   "devDependencies": {
@@ -18,7 +19,9 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "uglifyjs-webpack-plugin": "^1.1.6",
+    "webpack": "^3.10.0"
   },
   "dependencies": {
     "ajv": "^5.2.2",

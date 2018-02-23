@@ -7,6 +7,4 @@ export function resolveSchema(id, schemas) {
 	}
 
 	//external resolvers
-
-
 }

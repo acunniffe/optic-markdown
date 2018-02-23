@@ -24,11 +24,12 @@ if (program.args[0] === "init") {
 	});
 } else {
 
-
 	if (program.raw) {
+
 		parseMarkdownString(fileOrString || "", (description, errors) => {
 			console.log(JSON.stringify({description, errors}))
 		})
+
 	} else {
 
 		if (fileOrString) {

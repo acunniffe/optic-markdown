@@ -135,7 +135,7 @@ mapSchemaProperty -> ("mapUnique" | "map") _ "(" _ (sqstring | dqstring) _ ")" _
 
 %}
 
-stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".containing") (null | "[" _ int _ "]") _ assignTo _ (memberExpression) {%
+stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".containing") (null | "[" _ int _ "]") _ assignTo _ (propertyAssignment) {%
       function(data, location) {
           const rule = (data[1][0]) ? data[1][0].substring(1) : 'entire'
           const occurrence = (data[2][2]) ? data[2][2] : 0
@@ -153,7 +153,7 @@ stringFinder -> (sqstring | dqstring) (null | ".starting" | ".entire" | ".contai
       }
 %}
 
-rangeFinder -> int "-" int _ assignTo _ (memberExpression) {%
+rangeFinder -> int "-" int _ assignTo _ (propertyAssignment) {%
       function(data, location) {
           return {
               type: 'finderProperty',
@@ -166,6 +166,23 @@ rangeFinder -> int "-" int _ assignTo _ (memberExpression) {%
           };
       }
    %}
+
+
+propertyAssignment -> (memberExpression | rootExpansion) {%
+
+    function (data) {
+        return data[0][0]
+    }
+
+%}
+
+rootExpansion -> "{...}" {%
+    function (data) {
+        return {
+            type: 'rootExpansion',
+        }
+    }
+%}
 
 memberExpression -> keyName (_ "." _ keyName):* {%
     function (data) {

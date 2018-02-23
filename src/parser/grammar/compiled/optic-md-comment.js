@@ -334,7 +334,7 @@ var grammar = {
     {"name": "stringFinder$subexpression$2", "symbols": ["stringFinder$subexpression$2$string$3"]},
     {"name": "stringFinder$subexpression$3", "symbols": []},
     {"name": "stringFinder$subexpression$3", "symbols": [{"literal":"["}, "_", "int", "_", {"literal":"]"}]},
-    {"name": "stringFinder$subexpression$4", "symbols": ["memberExpression"]},
+    {"name": "stringFinder$subexpression$4", "symbols": ["propertyAssignment"]},
     {"name": "stringFinder", "symbols": ["stringFinder$subexpression$1", "stringFinder$subexpression$2", "stringFinder$subexpression$3", "_", "assignTo", "_", "stringFinder$subexpression$4"], "postprocess": 
         function(data, location) {
             const rule = (data[1][0]) ? data[1][0].substring(1) : 'entire'
@@ -352,7 +352,7 @@ var grammar = {
             };
         }
         },
-    {"name": "rangeFinder$subexpression$1", "symbols": ["memberExpression"]},
+    {"name": "rangeFinder$subexpression$1", "symbols": ["propertyAssignment"]},
     {"name": "rangeFinder", "symbols": ["int", {"literal":"-"}, "int", "_", "assignTo", "_", "rangeFinder$subexpression$1"], "postprocess": 
         function(data, location) {
             return {
@@ -366,6 +366,23 @@ var grammar = {
             };
         }
            },
+    {"name": "propertyAssignment$subexpression$1", "symbols": ["memberExpression"]},
+    {"name": "propertyAssignment$subexpression$1", "symbols": ["rootExpansion"]},
+    {"name": "propertyAssignment", "symbols": ["propertyAssignment$subexpression$1"], "postprocess": 
+        
+        function (data) {
+            return data[0][0]
+        }
+        
+        },
+    {"name": "rootExpansion$string$1", "symbols": [{"literal":"{"}, {"literal":"."}, {"literal":"."}, {"literal":"."}, {"literal":"}"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "rootExpansion", "symbols": ["rootExpansion$string$1"], "postprocess": 
+        function (data) {
+            return {
+                type: 'rootExpansion',
+            }
+        }
+        },
     {"name": "memberExpression$ebnf$1", "symbols": []},
     {"name": "memberExpression$ebnf$1$subexpression$1", "symbols": ["_", {"literal":"."}, "_", "keyName"]},
     {"name": "memberExpression$ebnf$1", "symbols": ["memberExpression$ebnf$1", "memberExpression$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},

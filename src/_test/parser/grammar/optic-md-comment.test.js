@@ -144,30 +144,42 @@ describe('markdown comment grammar', () => {
 	})
 
 
-	describe('member expressions', () => {
+	describe.only('property assignment types: ', () => {
 
-		it('works for a single key', () => {
-			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('memberExpression')));
-			parser.feed('test')
+		describe('member expressions', ()=> {
 
-			const expected = {"type": "memberExpression", "keys": ["test"]}
-			assert(equals(expected, parser.results[0]))
+			it('works for a single key', () => {
+				const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('propertyAssignment')));
+				parser.feed('test')
+				const expected = {"type": "memberExpression", "keys": ["test"]}
+				assert(equals(expected, parser.results[0]))
+			})
+
+			it('works for a multiple keys', () => {
+				const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('propertyAssignment')));
+				parser.feed('test.two.four')
+
+				const expected = {"type": "memberExpression", "keys": ["test", "two", "four"]}
+				assert(equals(expected, parser.results[0]))
+			})
+
+			it('works for a multiple keys with spaces', () => {
+				const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('propertyAssignment')));
+				parser.feed('test .   two.    four')
+
+				const expected = {"type": "memberExpression", "keys": ["test", "two", "four"]}
+				assert(equals(expected, parser.results[0]))
+			})
+
 		})
 
-		it('works for a multiple keys', () => {
-			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('memberExpression')));
-			parser.feed('test.two.four')
+		it('works for root expansions', ()=> {
+			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('propertyAssignment')));
+			parser.feed('{...}')
 
-			const expected = {"type": "memberExpression", "keys": ["test", "two", "four"]}
+			const expected = {"type": "rootExpansion"}
 			assert(equals(expected, parser.results[0]))
-		})
 
-		it('works for a multiple keys with spaces', () => {
-			const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('memberExpression')));
-			parser.feed('test .   two.    four')
-
-			const expected = {"type": "memberExpression", "keys": ["test", "two", "four"]}
-			assert(equals(expected, parser.results[0]))
 		})
 
 	})
