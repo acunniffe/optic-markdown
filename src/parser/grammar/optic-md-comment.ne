@@ -70,7 +70,7 @@ scope -> ("internal" | "public") {%
      }
 %}
 
-typeProperty -> ("schema-def" | "lens-def" | "container-def" ) {%
+typeProperty -> ("schema-def" | "lens-def" | "container-def" | "transformation-def" ) {%
       function(data, location) {
           return {
               type: 'typeProperty',
@@ -88,7 +88,7 @@ assignTo -> ("=>" | "<=>") {%
 
 %}
 
-assignmentProperty -> (("schema" | "id" | "name" | "author" | "version" | "language") _ "=" _ (sqstring | dqstring)) {%
+assignmentProperty -> (("schema" | "id" | "name" | "author" | "version" | "language" | "input" | "output") _ "=" _ (sqstring | dqstring)) {%
    function(data, location) {
        return {
            type: 'assignmentProperty',

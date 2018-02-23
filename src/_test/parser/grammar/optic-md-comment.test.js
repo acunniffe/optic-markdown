@@ -142,9 +142,8 @@ describe('markdown comment grammar', () => {
 		assert(equals(expected, parser.results[0]))
 
 	})
-
-
-	describe.only('property assignment types: ', () => {
+	8
+	describe('property assignment types: ', () => {
 
 		describe('member expressions', ()=> {
 

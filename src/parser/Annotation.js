@@ -44,7 +44,7 @@ export class Annotation {
 		const validAnnotationType = ['annotation', 'annotationPair'].includes(this.annotationType)
 		const validProperties = !!this.properties.length
 		const validCodeBlock = (this.annotationType === 'annotationPair') ? !!this.codeBlock : true
-		const validDefinitionType = !!this.definitionType && ['schema-def', 'lens-def', 'container-def'].includes(this.definitionType)
+		const validDefinitionType = !!this.definitionType && ['schema-def', 'lens-def', 'container-def', 'transformation-def'].includes(this.definitionType)
 
 		const errors = []
 

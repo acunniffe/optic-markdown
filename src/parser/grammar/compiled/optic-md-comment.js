@@ -233,6 +233,8 @@ var grammar = {
     {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$2"]},
     {"name": "typeProperty$subexpression$1$string$3", "symbols": [{"literal":"c"}, {"literal":"o"}, {"literal":"n"}, {"literal":"t"}, {"literal":"a"}, {"literal":"i"}, {"literal":"n"}, {"literal":"e"}, {"literal":"r"}, {"literal":"-"}, {"literal":"d"}, {"literal":"e"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$3"]},
+    {"name": "typeProperty$subexpression$1$string$4", "symbols": [{"literal":"t"}, {"literal":"r"}, {"literal":"a"}, {"literal":"n"}, {"literal":"s"}, {"literal":"f"}, {"literal":"o"}, {"literal":"r"}, {"literal":"m"}, {"literal":"a"}, {"literal":"t"}, {"literal":"i"}, {"literal":"o"}, {"literal":"n"}, {"literal":"-"}, {"literal":"d"}, {"literal":"e"}, {"literal":"f"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "typeProperty$subexpression$1", "symbols": ["typeProperty$subexpression$1$string$4"]},
     {"name": "typeProperty", "symbols": ["typeProperty$subexpression$1"], "postprocess": 
         function(data, location) {
             return {
@@ -265,6 +267,10 @@ var grammar = {
     {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$5"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$1$string$6", "symbols": [{"literal":"l"}, {"literal":"a"}, {"literal":"n"}, {"literal":"g"}, {"literal":"u"}, {"literal":"a"}, {"literal":"g"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$6"]},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1$string$7", "symbols": [{"literal":"i"}, {"literal":"n"}, {"literal":"p"}, {"literal":"u"}, {"literal":"t"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$7"]},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1$string$8", "symbols": [{"literal":"o"}, {"literal":"u"}, {"literal":"t"}, {"literal":"p"}, {"literal":"u"}, {"literal":"t"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$8"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["sqstring"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["dqstring"]},
     {"name": "assignmentProperty$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1", "_", {"literal":"="}, "_", "assignmentProperty$subexpression$1$subexpression$2"]},

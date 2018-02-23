@@ -10,6 +10,7 @@ import {getAssignmentProperty} from "../../helpers/AST";
 import {Snippet} from "../../sdk-objects/lenses/Snippet";
 import {Variable} from "../../sdk-objects/lenses/Variable";
 import {Container} from "../../sdk-objects/Container";
+import {Transformation} from "../../sdk-objects/Transformation";
 export function processAnnotations(rawAnnotations, callback) {
 
 	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock, i.language))
@@ -47,6 +48,7 @@ export function processAnnotations(rawAnnotations, callback) {
 		validSDKObjects.filter(i=> i instanceof Schema),
 		validSDKObjects.filter(i=> i instanceof Lens),
 		validSDKObjects.filter(i=> i instanceof Container),
+		validSDKObjects.filter(i=> i instanceof Transformation),
 	)
 
 	callback(description, errors)
@@ -147,6 +149,14 @@ export function annotationToSdkObject(annotation) {
 			})
 
 			return new Container(name, false, snippet, pullProperties, childrenRule, schemaComponents)
+		}
+
+		case 'transformation-def': {
+			const inputSchema = annotation.getProperty('inputSchema')
+			const outputSchema = annotation.getProperty('outputSchema')
+			const script = annotation.codeBlock
+
+			return new Transformation(inputSchema, outputSchema, script)
 		}
 	}
 }

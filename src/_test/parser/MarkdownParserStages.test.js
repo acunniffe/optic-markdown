@@ -8,6 +8,7 @@ import equals from 'deep-equal'
 import nearley from 'nearley'
 import {Lens} from "../../sdk-objects/lenses/Lens";
 import {Container} from "../../sdk-objects/Container";
+import {Transformation} from "../../sdk-objects/Transformation";
 
 describe('markdown', () => {
 
@@ -80,6 +81,34 @@ describe('markdown', () => {
 
 		})
 
+		it('can process a transformation-def', (done) => {
+
+			const lensObject = {
+				'type': 'annotationPair',
+				'properties': [
+					{'type': 'typeProperty', 'value': 'transformation-def', 'location': 5},
+					{'type': 'assignmentProperty', key: 'inputSchema', value: 'test', 'location': 5},
+					{'type': 'assignmentProperty', key: 'outputSchema', value: 'other:package/schema', 'location': 5}
+				],
+				'codeBlock': "function (a) {}"
+			}
+
+			processAnnotations([lensObject], (description, errors) => {
+				assert(!errors.length)
+				const transformation = description.transformations[0]
+				assert(transformation instanceof Transformation)
+
+				assert(errors.length === 0)
+
+				assert(equals(JSON.parse(JSON.stringify(transformation)), {
+					inputSchema: 'test',
+					outputSchema: 'other:package/schema',
+					script: 'function (a) {}' }))
+				done()
+			})
+
+		})
+
 		it('can process a lens-def', (done) => {
 
 			const lensDef = {
@@ -92,11 +121,6 @@ describe('markdown', () => {
 							key: 'schema',
 							value: 'test@1.1.1',
 							location: 19
-						},
-						{
-							type: 'assignmentProperty',
-							key: 'version',
-							value: 'es6'
 						},
 						{
 							type: 'finderProperty',
@@ -156,8 +180,7 @@ describe('markdown', () => {
 					"schema": "test@1.1.1",
 					"snippet": {
 						"language": "javascript",
-						"block": "const definedAs = require('pathTo')",
-						"version": "es6"
+						"block": "const definedAs = require('pathTo')"
 					},
 					"scope": "public",
 					"components": [{

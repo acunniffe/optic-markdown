@@ -21,7 +21,7 @@ export function NoValidDefinitionType(annotation, level = 'error') {
 	return {
 		level,
 		type: 'NoValidDefinitionType',
-		message: `No valid definition type found in annotation. Must include 'schema-def', 'lens-def' or... `,
+		message: `No valid definition type found in annotation. Must include 'schema-def', 'lens-def', 'container-def', or 'transformation-def'. `,
 		isError: true
 	}
 }
@@ -57,6 +57,15 @@ export function InvalidSchemaDefinition(msg, level = 'error') {
 	return {
 		level,
 		type: 'InvalidSchemaDefinition',
+		message: msg,
+		isError: true
+	}
+}
+
+export function InvalidTransformationDefinition(msg, level = 'error') {
+	return {
+		level,
+		type: 'InvalidTransformationDefinition',
 		message: msg,
 		isError: true
 	}
