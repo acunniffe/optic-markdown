@@ -6,8 +6,7 @@
   "scripts": {
     "test": "npm run build && find ./lib -name '*.test.js' | xargs mocha -R spec",
     "scratch": "npm run build && node ./lib/cli.js examples/ShowConfirmAlert.md",
-    "build": "sh build.sh",
-    "build-for-core": "npm run build && webpack webpack.config.js"
+    "build": "sh build.sh"
   },
   "bin": {
     "optic-md": "lib/cli.js"
@@ -24,8 +23,11 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
+    "acorn": "^5.4.1",
     "ajv": "^5.2.2",
     "args-js": "^0.10.12",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-remove-strict-mode": "0.0.2",
     "commander": "^2.12.2",
     "deep-equal": "^1.0.1",
     "deep-freeze": "0.0.1",
