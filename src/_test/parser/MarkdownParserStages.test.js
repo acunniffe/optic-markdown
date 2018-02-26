@@ -86,6 +86,7 @@ describe('markdown', () => {
 			const lensObject = {
 				'type': 'annotationPair',
 				'properties': [
+					{'type': 'assignmentProperty', key: 'name', value: 'Test from Schema', 'location': 5},
 					{'type': 'typeProperty', 'value': 'transformation-def', 'location': 5},
 					{'type': 'assignmentProperty', key: 'inputSchema', value: 'test', 'location': 5},
 					{'type': 'assignmentProperty', key: 'outputSchema', value: 'other:package/schema', 'location': 5}
@@ -103,6 +104,7 @@ describe('markdown', () => {
 				console.log(transformation)
 
 				assert(equals(JSON.parse(JSON.stringify(transformation)), {
+					name: 'Test from Schema',
 					inputSchema: 'test',
 					outputSchema: 'other:package/schema',
 					script: 'function transform(a) {}' }))

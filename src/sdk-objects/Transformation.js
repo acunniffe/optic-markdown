@@ -4,7 +4,8 @@ import {extractFunction} from "../utils/TransformationCode";
 
 export class Transformation {
 
-	constructor(inputSchema, outputSchema, script) {
+	constructor(name, inputSchema, outputSchema, script) {
+		this.name = name;
 		this.inputSchema = inputSchema;
 		this.outputSchema = outputSchema;
 		this.script = extractFunction(script, 'transform');
@@ -14,6 +15,11 @@ export class Transformation {
 
 	errors() {
 		const errors = []
+
+		if (!this.name) {
+			return errors.push(new InvalidTransformationDefinition('Transformations need to a define a "name"'))
+		}
+
 		if (!this.inputSchema) {
 			return errors.push(new InvalidTransformationDefinition('Transformations need to a define an "inputSchema"'))
 		}
