@@ -90,7 +90,7 @@ describe('markdown', () => {
 					{'type': 'assignmentProperty', key: 'inputSchema', value: 'test', 'location': 5},
 					{'type': 'assignmentProperty', key: 'outputSchema', value: 'other:package/schema', 'location': 5}
 				],
-				'codeBlock': "function (a) {}"
+				'codeBlock': "function transform (a) {}"
 			}
 
 			processAnnotations([lensObject], (description, errors) => {
@@ -100,10 +100,12 @@ describe('markdown', () => {
 
 				assert(errors.length === 0)
 
+				console.log(transformation)
+
 				assert(equals(JSON.parse(JSON.stringify(transformation)), {
 					inputSchema: 'test',
 					outputSchema: 'other:package/schema',
-					script: 'function (a) {}' }))
+					script: 'function transform(a) {}' }))
 				done()
 			})
 
