@@ -153,11 +153,11 @@ export function annotationToSdkObject(annotation) {
 
 		case 'transformation-def': {
 			const name = annotation.getProperty('name')
-			const inputSchema = annotation.getProperty('inputSchema')
-			const outputSchema = annotation.getProperty('outputSchema')
+			const input = annotation.getProperty('input')
+			const output = annotation.getProperty('output')
 			const script = annotation.codeBlock
 
-			return new Transformation(name, inputSchema, outputSchema, script)
+			return new Transformation(name, input, output, script)
 		}
 	}
 }

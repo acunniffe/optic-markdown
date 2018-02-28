@@ -88,8 +88,8 @@ describe('markdown', () => {
 				'properties': [
 					{'type': 'assignmentProperty', key: 'name', value: 'Test from Schema', 'location': 5},
 					{'type': 'typeProperty', 'value': 'transformation-def', 'location': 5},
-					{'type': 'assignmentProperty', key: 'inputSchema', value: 'test', 'location': 5},
-					{'type': 'assignmentProperty', key: 'outputSchema', value: 'other:package/schema', 'location': 5}
+					{'type': 'assignmentProperty', key: 'input', value: 'test', 'location': 5},
+					{'type': 'assignmentProperty', key: 'output', value: 'other:package/schema', 'location': 5}
 				],
 				'codeBlock': "function transform (a) {}"
 			}
@@ -105,8 +105,8 @@ describe('markdown', () => {
 
 				assert(equals(JSON.parse(JSON.stringify(transformation)), {
 					name: 'Test from Schema',
-					inputSchema: 'test',
-					outputSchema: 'other:package/schema',
+					input: 'test',
+					output: 'other:package/schema',
 					script: 'function transform(a) {}' }))
 				done()
 			})
