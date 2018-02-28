@@ -9,7 +9,6 @@ export class Transformation {
 		this.input = input;
 		this.output = output;
 		this.script = extractFunction(script, 'transform');
-
 	}
 
 
@@ -25,7 +24,7 @@ export class Transformation {
 		}
 
 		if (!this.output) {
-			return errors.push(new InvalidTransformationDefinition('Transformations need to a define an "output"'))
+			return errors.push(new InvalidTransformationDefinition('Transformations need to a define an "outputSchema"'))
 		}
 
 
@@ -33,7 +32,7 @@ export class Transformation {
 			return errors.push(new InvalidTransformationDefinition(`Transformation code is not contain a valid Javascript Function named "transform"`))
 		}
 
-		if (!this.script && this.script !== null) {
+		if (!this.script) {
 			return errors.push(new InvalidTransformationDefinition('Transformations need to a define a script'))
 		}
 

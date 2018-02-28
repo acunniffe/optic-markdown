@@ -12,8 +12,8 @@ export function extractFunction(raw, name) {
 
 		if (found) {
 			return transform(functionString, {
-				"presets": ["es2015"],
-				"plugins": ["transform-object-rest-spread", "transform-remove-strict-mode"]
+				"presets": [require('babel-preset-es2015')],
+				"plugins": [require('babel-plugin-transform-object-rest-spread'), require('babel-plugin-transform-remove-strict-mode')]
 			}).code
 		}
 

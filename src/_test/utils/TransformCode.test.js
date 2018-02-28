@@ -1,7 +1,7 @@
 import assert from 'assert'
 import {extractFunction} from "../../utils/TransformationCode";
 
-describe('Transformation Code Extraction', ()=> {
+describe.only('Transformation Code Extraction', ()=> {
 
 	it('extracts & transforms raw javascript for the transform function', ()=> {
 
