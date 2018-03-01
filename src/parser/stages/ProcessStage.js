@@ -44,7 +44,7 @@ export function processAnnotations(rawAnnotations, callback) {
 	const errors = sdkAnnotations.filter(i=> !i.isValid()).map(i=> i.errors())
 		     .concat(asSDKObjects.filter(i=> !i.isValid()).map(i=> i.errors()))
 
-	const description = new Description(metadataAnnotation, dependenciesAnnotation.asArray,
+	const description = new Description(metadataAnnotation, dependenciesAnnotation.asArray(),
 		validSDKObjects.filter(i=> i instanceof Schema),
 		validSDKObjects.filter(i=> i instanceof Lens),
 		validSDKObjects.filter(i=> i instanceof Container),
