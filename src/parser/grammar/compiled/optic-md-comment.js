@@ -191,9 +191,9 @@ var grammar = {
             };
         }
           },
-    {"name": "packageRef$ebnf$1$subexpression$1", "symbols": [/[\da-z-><\+]/]},
+    {"name": "packageRef$ebnf$1$subexpression$1", "symbols": [/[\da-z-><\+:]/]},
     {"name": "packageRef$ebnf$1", "symbols": ["packageRef$ebnf$1$subexpression$1"]},
-    {"name": "packageRef$ebnf$1$subexpression$2", "symbols": [/[\da-z-><\+]/]},
+    {"name": "packageRef$ebnf$1$subexpression$2", "symbols": [/[\da-z-><\+:]/]},
     {"name": "packageRef$ebnf$1", "symbols": ["packageRef$ebnf$1", "packageRef$ebnf$1$subexpression$2"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "packageRef$ebnf$2", "symbols": [/[A-Za-z0-9\.\+\*-]/]},
     {"name": "packageRef$ebnf$2", "symbols": ["packageRef$ebnf$2", /[A-Za-z0-9\.\+\*-]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},

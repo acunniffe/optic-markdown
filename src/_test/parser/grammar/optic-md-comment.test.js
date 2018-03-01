@@ -100,12 +100,21 @@ describe('markdown comment grammar', () => {
 
 	})
 
+	it('works for package refs', ()=> {
+		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(testGrammarType('packageRef')));
+
+		parser.feed('optic:test@1.0.0')
+
+		assert('optic:test@1.0.0' === parser.results[0])
+
+	})
+
 	it('works for annotation that declares dependencies', () => {
 
 		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
-		parser.feed("<!-- DEPENDENCIES \n test@1.1.1 \n test2@1.2.2 -->")
+		parser.feed("<!-- DEPENDENCIES \n optic:test@1.1.1 \n optic:test2@1.2.2 -->")
 
-		const expected = {"type": "dependenciesAnnotation", "dependencies": ["test@1.1.1", "test2@1.2.2"]}
+		const expected = {"type": "dependenciesAnnotation", "dependencies": ["optic:test@1.1.1", "optic:test2@1.2.2"]}
 
 		assert(equals(expected, parser.results[0]))
 

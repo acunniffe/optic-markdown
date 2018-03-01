@@ -76,10 +76,10 @@ export function annotationToSdkObject(annotation) {
 			const name = annotation.getProperty('name')
 			const schema = annotation.getProperty('schema')
 
-			const language = annotation.language
-			const version = annotation.getProperty('version')
+			const languagePrimary = annotation.getProperty('language')
+			const languageSecondary = annotation.language
 
-			const snippet = new Snippet(annotation.codeBlock, language, version)
+			const snippet = new Snippet(annotation.codeBlock, languagePrimary || languageSecondary)
 
 			const codeComponents = annotation.getPropertiesOfType('finderProperty').map(f => {
 				const finder = new Finder(f)
@@ -128,10 +128,10 @@ export function annotationToSdkObject(annotation) {
 		case 'container-def': {
 			const name = annotation.getProperty('name')
 
-			const language = annotation.language
-			const version = annotation.getProperty('version')
+			const languagePrimary = annotation.getProperty('language')
+			const languageSecondary = annotation.language
 
-			const snippet = new Snippet(annotation.codeBlock, language, version)
+			const snippet = new Snippet(annotation.codeBlock, languagePrimary || languageSecondary)
 
 			const pullProperties = annotation.getPropertiesOfType('pullProperty').map(m => {
 				return m.schema

@@ -1,8 +1,7 @@
 export class Snippet {
-	constructor(block, language, version) {
+	constructor(block, language) {
 		this.language = language
 		this.block = block
-		this.version = version
 	}
 
 	isValid() {

@@ -46,7 +46,7 @@ dependencies -> "<!-- " _ "DEPENDENCIES"  (__ packageRef):* __ "-->" {%
      }
   %}
 
-packageRef -> ([\da-z-><\+]):+ "@" [A-Za-z0-9\.\+\*-]:+ {% function(d) {
+packageRef -> ([\da-z-><\+:]):+ "@" [A-Za-z0-9\.\+\*-]:+ {% function(d) {
     return d[0].join("") + d[1] + d[2].join("")
   }
 %}
