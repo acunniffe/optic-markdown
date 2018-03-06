@@ -1,9 +1,8 @@
-import nearley from "nearley";
 import {commentAnnotationRegex} from "../grammar/Regexes";
-import grammar from '../grammar/compiled/optic-md-comment'
 import fs from 'fs'
-import compiledGrammar from '../grammar/compiled/optic-md-comment'
 import {NoAnnotationsFound, ParseError} from "../../Errors";
+const compiledGrammar  = require('../grammar/compiled/optic-md-comment')
+const nearley = require("nearley")
 
 export function parse(file, callback) {
 

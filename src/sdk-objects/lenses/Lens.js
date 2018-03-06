@@ -1,6 +1,3 @@
-import {RequiredFieldNotSetInLens} from "../../Errors";
-import {DefaultContext} from "../../parser/stages/ProcessStage";
-
 export class Lens {
 
 	constructor(name, schema, snippet, scope, components, rules, variables, subcontainers) {

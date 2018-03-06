@@ -11,6 +11,7 @@ import {Snippet} from "../../sdk-objects/lenses/Snippet";
 import {Variable} from "../../sdk-objects/lenses/Variable";
 import {Container} from "../../sdk-objects/Container";
 import {Transformation} from "../../sdk-objects/Transformation";
+
 export function processAnnotations(rawAnnotations, callback) {
 
 	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock, i.language))
