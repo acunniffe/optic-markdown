@@ -5,11 +5,13 @@ import prompt from 'prompt'
 import {parseMarkdownFile, parseMarkdownString} from "./parser/MarkdownParser";
 import {newMarkdownFile} from "./utils/MdBuilder";
 
+import pJson from '../package.json'
+
 prompt.message = '';
 
 program
 	.usage('[options] <file>')
-	.version('0.1.0')
+	.version(pJson.version)
 	.option('-r, --raw', 'Parse raw text')
 	.parse(process.argv);
 

@@ -46,7 +46,7 @@ describe('markdown comment grammar', () => {
 		assert(equals(expected, parser.results[0]))
 	})
 
-	it.only('works when line breaks occur before first annotation', () => {
+	it('works when line breaks occur before first annotation', () => {
 		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 		parser.feed("<!-- \n schema-def \n internal -->")
 
