@@ -46,6 +46,18 @@ describe('markdown comment grammar', () => {
 		assert(equals(expected, parser.results[0]))
 	})
 
+	it.only('works when line breaks occur before first annotation', () => {
+		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
+		parser.feed("<!-- \n schema-def \n internal -->")
+
+		const expected = {
+			"type": "annotation",
+			"properties": [{"type": "typeProperty", "value": "schema-def", "location": 7}, {type: 'scopeProperty', value: 'internal'}]
+		}
+
+		assert(equals(expected, parser.results[0]))
+	})
+
 	it('works for comments with code blocks', () => {
 		const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
 		parser.feed("<!-- schema-def internal --> \n" +
