@@ -8,9 +8,6 @@
     "scratch": "npm run build && node ./lib/cli.js examples/ShowConfirmAlert.md",
     "build": "sh build.sh"
   },
-  "bin": {
-    "optic-md": "lib/cli.js"
-  },
   "license": "MIT",
   "devDependencies": {
     "mocha": "^3.4.2",
