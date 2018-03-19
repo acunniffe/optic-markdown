@@ -3,7 +3,7 @@
 import program from 'commander'
 import prompt from 'prompt'
 import {parseMarkdownFile, parseMarkdownString} from "./parser/MarkdownParser";
-import {newMarkdownFile} from "./utils/MdBuilder";
+import {newMarkdownFile} from "./helpers/MdBuilder";
 
 import pJson from '../package.json'
 
