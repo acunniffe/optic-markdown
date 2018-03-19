@@ -43,7 +43,6 @@ export class Ask {
 		const properties = schemaFields.reduce((accumulator, field) => Object.assign(accumulator, field), {})
 
 		const schema = {
-			title: 'Transformation Ask Schema',
 			type: 'object',
 			properties,
 			_order: order,
