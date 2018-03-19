@@ -108,7 +108,6 @@ describe('markdown', () => {
 					input: 'test',
 					output: 'other:package/schema',
 					ask:  {
-						title: 'Transformation Ask Schema',
 						type: 'object',
 						properties: {},
 						_order: [],

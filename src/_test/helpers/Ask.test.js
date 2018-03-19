@@ -63,7 +63,9 @@ describe('Ask', ()=> {
 			f.forSchema('schema', 'for this purpose')
 			f.forPrimitive('X?', 'desc', 'boolean')
 
-			assert(equals(f.toJsonSchema(), {"title":"Transformation Ask Schema","type":"object","properties":{"string":{"description":"desc","type":"string"},"lens":{"description":"to do X","type":"string","_opticValidation":{"accepts":"lens","withSchema":"test:package/schema"}},"schema":{"description":"for this purpose","type":"string","_opticValidation":{"accepts":"schema"}},"X?":{"description":"desc","type":"boolean"}},"_order":["string","lens","schema","X?"],"required":["string","lens","schema","X?"]}
+			console.log(f.toJsonSchema())
+
+			assert(equals(f.toJsonSchema(), {"type":"object","properties":{"string":{"description":"desc","type":"string"},"lens":{"description":"to do X","type":"string","_opticValidation":{"accepts":"lens","withSchema":"test:package/schema"}},"schema":{"description":"for this purpose","type":"string","_opticValidation":{"accepts":"schema"}},"X?":{"description":"desc","type":"boolean"}},"_order":["string","lens","schema","X?"],"required":["string","lens","schema","X?"]}
 			))
 		})
 

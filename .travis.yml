@@ -2,3 +2,7 @@ language: node_js
 node_js:
   - "iojs"
   - "8"
+
+before_install:
+  - npm install -g babel-cli
+  - npm install -g nearley
