@@ -1,6 +1,6 @@
 
 import {InvalidTransformationDefinition} from "../Errors";
-import {extractFunction} from "../utils/TransformationCode";
+import {extractAskCalls, extractFunction} from "../helpers/TransformationCode";
 
 export class Transformation {
 
@@ -8,6 +8,7 @@ export class Transformation {
 		this.name = name;
 		this.input = input;
 		this.output = output;
+		this.ask = extractAskCalls(script).toJsonSchema();
 		this.script = extractFunction(script, 'transform');
 	}
 
@@ -29,7 +30,7 @@ export class Transformation {
 
 
 		if (this.script === null) {
-			return errors.push(new InvalidTransformationDefinition(`Transformation code is not contain a valid Javascript Function named "transform"`))
+			return errors.push(new InvalidTransformationDefinition(`Transformation code does not contain a valid Javascript Function named "transform"`))
 		}
 
 		if (!this.script) {
