@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {extractFunction} from "../../utils/TransformationCode";
+import {extractAskCalls, extractFunction} from "../../helpers/TransformationCode";
 
 describe('Transformation Code Extraction', ()=> {
 
@@ -17,4 +17,17 @@ describe('Transformation Code Extraction', ()=> {
 		assert(!extractFunction(raw, 'transform'))
 	})
 
+
+	describe('Ask', ()=> {
+
+		it('can extract ask statements from raw code', ()=> {
+			const raw = `
+				ask.forPrimitive('Input1', 'for use', 'string')
+				ask.forPrimitive('Input2', 'for use', 'string')
+			`
+			const results = extractAskCalls(raw)
+			assert(results.size() === 2)
+		})
+
+	})
 })

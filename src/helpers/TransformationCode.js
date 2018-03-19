@@ -1,10 +1,12 @@
 import {parse} from 'acorn'
 import {transform} from 'babel-core';
+import safeEval from 'safe-eval'
+import {Ask} from "./Ask";
 
-export function extractFunction(raw, name) {
+export function extractFunction(raw, name, useAst) {
 
 	try {
-		const ast = parse(raw, {ranges: true})
+		const ast = useAst || parse(raw, {ranges: true})
 
 		const found = ast.body.find(child=> child.type === 'FunctionDeclaration' && child.id.name === name)
 
@@ -20,5 +22,20 @@ export function extractFunction(raw, name) {
 	} catch (errors) {
 		// console.log(errors)
 	}
+
+}
+
+export function extractAskCalls(raw) {
+
+	const ask = new Ask()
+
+	try {
+		safeEval(raw, {ask})
+
+	} catch (errors) {
+		console.log(errors)
+	}
+
+	return ask
 
 }
