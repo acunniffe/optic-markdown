@@ -111,7 +111,6 @@ describe('markdown', () => {
 						type: 'object',
 						properties: {},
 						_order: [],
-						required: []
 					},
 					script: 'function transform(a) {}' }))
 				done()

@@ -46,7 +46,10 @@ export class Ask {
 			type: 'object',
 			properties,
 			_order: order,
-			required: order
+		}
+
+		if (!!order.length) {
+			schema.required = order
 		}
 
 		return schema

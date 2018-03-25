@@ -69,6 +69,11 @@ describe('Ask', ()=> {
 			))
 		})
 
+		it('required will not be set if no fields', ()=> {
+			const f = fixture()
+			assert(!f.toJsonSchema().required)
+		})
+
 	})
 
 })
