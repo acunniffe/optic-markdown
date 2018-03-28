@@ -52,6 +52,10 @@ export class Ask {
 			schema.required = order
 		}
 
+		if (!order.length) {
+			delete schema.required
+		}
+
 		return schema
 	}
 

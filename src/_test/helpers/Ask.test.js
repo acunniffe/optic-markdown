@@ -63,15 +63,8 @@ describe('Ask', ()=> {
 			f.forSchema('schema', 'for this purpose')
 			f.forPrimitive('X?', 'desc', 'boolean')
 
-			console.log(f.toJsonSchema())
-
 			assert(equals(f.toJsonSchema(), {"type":"object","properties":{"string":{"description":"desc","type":"string"},"lens":{"description":"to do X","type":"string","_opticValidation":{"accepts":"lens","withSchema":"test:package/schema"}},"schema":{"description":"for this purpose","type":"string","_opticValidation":{"accepts":"schema"}},"X?":{"description":"desc","type":"boolean"}},"_order":["string","lens","schema","X?"],"required":["string","lens","schema","X?"]}
 			))
-		})
-
-		it('required will not be set if no fields', ()=> {
-			const f = fixture()
-			assert(!f.toJsonSchema().required)
 		})
 
 	})
