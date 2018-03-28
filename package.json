@@ -1,6 +1,10 @@
 {
   "name": "optic-markdown",
+<<<<<<< HEAD
   "version": "0.1.4",
+=======
+  "version": "0.1.5",
+>>>>>>> release/0.1.5
   "description": "Human & Machine Readable Docs",
   "main": "lib/cli.js",
   "scripts": {
