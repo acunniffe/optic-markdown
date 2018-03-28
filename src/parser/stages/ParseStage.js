@@ -26,16 +26,30 @@ export function parseString(contents = "", callback) {
 
 	const annotations = contents.match(commentAnnotationRegex)
 
+	const annotationRanges = []
+
+	var match
+	while (match = commentAnnotationRegex.exec(contents)) {
+		const start = match.index
+		const end = commentAnnotationRegex.lastIndex
+		annotationRanges.push({
+			start,
+			end
+		})
+	}
+
 	if (annotations === null) {
 		errors.push(NoAnnotationsFound())
 		return callback(undefined, errors)
 	}
 
+	var i = -1
 	const parsed = annotations.map(a=> {
+		i++
 		try {
 			const parser = new nearley.Parser(compiledGrammar);
 			parser.feed(a);
-			return parser.results[0]
+			return {...parser.results[0], range: annotationRanges[i]}
 		} catch (err) {
 			return ParseError(err)
 		}

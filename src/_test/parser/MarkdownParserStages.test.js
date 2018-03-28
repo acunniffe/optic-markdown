@@ -12,7 +12,7 @@ import {Transformation} from "../../sdk-objects/Transformation";
 
 describe('markdown', () => {
 
-	describe('parse stage', () => {
+	describe.only('parse stage', () => {
 
 		it('no results a file without annotations', (done) => {
 			parse('examples/NoAnnotations.md', (results, errors) => {
