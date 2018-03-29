@@ -1,6 +1,6 @@
 export class Lens {
 
-	constructor(name, schema, snippet, scope, components, rules, variables, subcontainers) {
+	constructor(name, schema, snippet, scope, components, rules, variables, subcontainers, range) {
 
 		this.name = name
 		this.schema = schema
@@ -10,6 +10,7 @@ export class Lens {
 		this.rules = rules
 		this.variables = variables
 		this.subcontainers = subcontainers
+		this.range = range
 	}
 
 	errors() {

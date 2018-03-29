@@ -4,12 +4,13 @@ import {extractAskCalls, extractFunction} from "../helpers/TransformationCode";
 
 export class Transformation {
 
-	constructor(name, input, output, script) {
+	constructor(name, input, output, script, range) {
 		this.name = name;
 		this.input = input;
 		this.output = output;
 		this.ask = extractAskCalls(script).toJsonSchema();
 		this.script = extractFunction(script, 'transform');
+		this.range = range
 	}
 
 

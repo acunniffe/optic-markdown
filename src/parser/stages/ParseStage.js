@@ -43,7 +43,7 @@ export function parseString(contents = "", callback) {
 		return callback(undefined, errors)
 	}
 
-	var i = -1
+	let i = -1
 	const parsed = annotations.map(a=> {
 		i++
 		try {
