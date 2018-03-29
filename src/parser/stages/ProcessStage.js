@@ -14,7 +14,7 @@ import {Transformation} from "../../sdk-objects/Transformation";
 
 export function processAnnotations(rawAnnotations, callback) {
 
-	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock, i.language))
+	const sdkAnnotations = rawAnnotations.filter(i=> i.type === 'annotationPair' || i.type === 'annotation').map(i=> new Annotation(i.type, i.properties, i.codeBlock, i.language, i.range))
 
 	const dependenciesAnnotation = (()=> {
 		const allDependencyLists = rawAnnotations.filter(i=> i.type === 'dependenciesAnnotation').map(i=> i.dependencies)
@@ -58,6 +58,8 @@ export function processAnnotations(rawAnnotations, callback) {
 
 export function annotationToSdkObject(annotation) {
 
+	const range = annotation.range
+
 	//@todo clean up error flow
 	switch (annotation.definitionType) {
 		case 'schema-def': {
@@ -71,7 +73,7 @@ export function annotationToSdkObject(annotation) {
 				console.log(e)
 			}
 
-			return new Schema(id, json)
+			return new Schema(id, json, range)
 		}
 		case 'lens-def': {
 			const name = annotation.getProperty('name')
@@ -124,7 +126,7 @@ export function annotationToSdkObject(annotation) {
 				return new Container(c.name, true, undefined, pulls, childrenRule, schemaComponents)
 			})
 
-			return new Lens(name, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers)
+			return new Lens(name, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers, range)
 		}
 		case 'container-def': {
 			const name = annotation.getProperty('name')
@@ -149,7 +151,7 @@ export function annotationToSdkObject(annotation) {
 				})
 			})
 
-			return new Container(name, false, snippet, pullProperties, childrenRule, schemaComponents)
+			return new Container(name, false, snippet, pullProperties, childrenRule, schemaComponents, range)
 		}
 
 		case 'transformation-def': {
@@ -158,7 +160,7 @@ export function annotationToSdkObject(annotation) {
 			const output = annotation.getProperty('output')
 			const script = annotation.codeBlock
 
-			return new Transformation(name, input, output, script)
+			return new Transformation(name, input, output, script, range)
 		}
 	}
 }

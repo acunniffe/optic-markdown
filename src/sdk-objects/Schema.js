@@ -7,9 +7,10 @@ ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'));
 
 export class Schema {
 
-	constructor(id, json) {
+	constructor(id, json, range) {
 		this.id = id;
 		this.definition = json;
+		this.range = range
 	}
 
 	matches(data) {
