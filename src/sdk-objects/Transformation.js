@@ -4,8 +4,8 @@ import {extractAskCalls, extractFunction} from "../helpers/TransformationCode";
 
 export class Transformation {
 
-	constructor(name, input, output, script, range) {
-		this.name = name;
+	constructor(yields, input, output, script, range) {
+		this.yields = yields;
 		this.input = input;
 		this.output = output;
 		this.ask = extractAskCalls(script).toJsonSchema();
@@ -17,8 +17,8 @@ export class Transformation {
 	errors() {
 		const errors = []
 
-		if (!this.name) {
-			return errors.push(new InvalidTransformationDefinition('Transformations need to a define a "name"'))
+		if (!this.yields) {
+			return errors.push(new InvalidTransformationDefinition('Transformations need to a define "yields"'))
 		}
 
 		if (!this.input) {
@@ -26,7 +26,7 @@ export class Transformation {
 		}
 
 		if (!this.output) {
-			return errors.push(new InvalidTransformationDefinition('Transformations need to a define an "outputSchema"'))
+			return errors.push(new InvalidTransformationDefinition('Transformations need to a define an "output"'))
 		}
 
 
