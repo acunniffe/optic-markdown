@@ -22,7 +22,7 @@ export class Lens {
 		const errors = []
 
 		if (!this.id || typeof this.id !== 'string') {
-			errors.push(MissingProperty("Missing Property 'id' in schema definition"))
+			errors.push(MissingProperty("Missing Property 'id' in lens definition"))
 		}
 
 		if (!validatePackageExportName(this.id)) {
