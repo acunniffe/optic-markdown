@@ -97,3 +97,12 @@ export function RequiredFieldNotSetInLens(field, level = 'error') {
 		isError: true
 	}
 }
+
+export function InvalidId(id, level = 'error') {
+	return {
+		level,
+		type: 'InvalidId',
+		message: `'${id}' is not a valid identifier.`,
+		isError: true
+	}
+}

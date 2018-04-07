@@ -1,7 +1,8 @@
 import Ajv from 'ajv'
 import deref from 'json-schema-deref-sync'
 import collection from 'lodash/collection'
-import {InvalidSchemaDefinition, MissingProperty} from "../Errors";
+import {InvalidId, InvalidSchemaDefinition, MissingProperty} from "../Errors";
+import {validatePackageExportName} from "../parser/grammar/Regexes";
 var ajv = new Ajv();
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'));
 
@@ -33,6 +34,10 @@ export class Schema {
 
 		if (!this.id || typeof this.id !== 'string') {
 			errors.push(MissingProperty("Missing Property 'id' in schema definition"))
+		}
+
+		if (!validatePackageExportName(this.id)) {
+			errors.push(InvalidId(this.id))
 		}
 
 		return errors

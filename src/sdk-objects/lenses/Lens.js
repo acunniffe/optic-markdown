@@ -1,8 +1,12 @@
+import {InvalidId, MissingProperty} from "../../Errors";
+import {validatePackageExportName} from "../../parser/grammar/Regexes";
+
 export class Lens {
 
-	constructor(name, schema, snippet, scope, components, rules, variables, subcontainers, range) {
+	constructor(name, id, schema, snippet, scope, components, rules, variables, subcontainers, range) {
 
 		this.name = name
+		this.id = id
 		this.schema = schema
 		this.snippet = snippet
 		this.scope = scope
@@ -17,7 +21,13 @@ export class Lens {
 
 		const errors = []
 
-		//@todo impl
+		if (!this.id || typeof this.id !== 'string') {
+			errors.push(MissingProperty("Missing Property 'id' in schema definition"))
+		}
+
+		if (!validatePackageExportName(this.id)) {
+			errors.push(InvalidId(this.id))
+		}
 
 		return errors
 	}

@@ -77,6 +77,7 @@ export function annotationToSdkObject(annotation) {
 		}
 		case 'lens-def': {
 			const name = annotation.getProperty('name')
+			const id = annotation.getProperty('id')
 			const schema = annotation.getProperty('schema')
 
 			const languagePrimary = annotation.getProperty('language')
@@ -126,7 +127,7 @@ export function annotationToSdkObject(annotation) {
 				return new Container(c.name, true, undefined, pulls, childrenRule, schemaComponents)
 			})
 
-			return new Lens(name, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers, range)
+			return new Lens(name, id, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers, range)
 		}
 		case 'container-def': {
 			const name = annotation.getProperty('name')

@@ -132,6 +132,12 @@ describe('markdown', () => {
 							location: 19
 						},
 						{
+							type: 'assignmentProperty',
+							key: 'id',
+							value: 'testabc',
+							location: 19
+						},
+						{
 							type: 'finderProperty',
 							finderType: 'stringFinder',
 							string: 'definedAs',
@@ -187,6 +193,7 @@ describe('markdown', () => {
 				// console.log(JSON.stringify(lens))
 				assert(equals(JSON.parse(JSON.stringify(lens)), {
 					"schema": "test@1.1.1",
+					"id": "testabc",
 					"snippet": {
 						"language": "javascript",
 						"block": "const definedAs = require('pathTo')"
