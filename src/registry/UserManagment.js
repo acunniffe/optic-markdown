@@ -6,21 +6,28 @@ const serviceName = (registry) => `optic:`+registry
 
 export async function addUser(email, password, registry = hardcodedRegsitry) {
 	console.log(`Updated credentials for ${registry}`)
+	await keytar.deletePassword(serviceName(registry), email)
 	return await keytar.setPassword(serviceName(registry), email, password)
 }
 
 export async function getCredentials(registry) {
 	const credentials =  await keytar.findCredentials(serviceName(registry))
-	if (credentials[0]) {
-		return {email: credentials[0].account, password: credentials[0].password}
+	if (credentials[credentials.length-1]) {
+		return {email: credentials[credentials.length-1].account, password: credentials[credentials.length-1].password}
 	}
 	return undefined
 }
 
-export function createUser(email, password, namespace, callback, registry = hardcodedRegsitry) {
+export function createUser(email, password, namespace, callback = ()=> {}, registry = hardcodedRegsitry) {
+	console.log('Working...')
 	const body = JSON.stringify({email, password, namespace})
 
 	request({url: `${registryHost}/users/create`, method: 'POST', body }, (err, response, body)=> {
+
+		if (!response) {
+			console.error('No response from server. Please try again')
+			callback(false)
+		}
 
 		if (response.statusCode === 200) {
 			console.log(`User created for ${email} with namespace '${namespace}'`)
