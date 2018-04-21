@@ -6,7 +6,7 @@ import {parseMarkdownFile, parseMarkdownString} from "./parser/MarkdownParser";
 import {newMarkdownFile} from "./helpers/MdBuilder";
 import {addUser, createUser} from "./registry/UserManagment";
 import pJson from '../package.json'
-import {publishPackage} from "./registry/Publish";
+import {publishLocal, publishPackage} from "./registry/Publish";
 
 prompt.message = '';
 
@@ -69,6 +69,8 @@ if (program.args[0] === "init") {
 
 } else if (program.args[0] === "publish") {
 	publishPackage(program.args[1])
+} else if (program.args[0] === "publishlocal") {
+	publishLocal(program.args[1])
 } else {
 
 	if (program.raw) {

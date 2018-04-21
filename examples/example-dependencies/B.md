@@ -1,2 +1,2 @@
-<!-- metadata name="B" author="test" version="0.1.0" -->
+<!-- metadata name="b" author="test" version="0.1.0" -->
 

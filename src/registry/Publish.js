@@ -3,6 +3,8 @@ import {addUser, getCredentials} from "./UserManagment";
 import {hardcodedRegsitry, registryHost} from "./Config";
 import request from "request";
 import pJson from '../../package'
+import fs from 'fs-extra'
+import os from 'os'
 export function publishPackage(filePath, callback, registry = hardcodedRegsitry) {
 	setupPublishRequest(filePath, (pubReq)=> {
 
@@ -23,6 +25,37 @@ export function publishPackage(filePath, callback, registry = hardcodedRegsitry)
 		}
 
 	}, registry)
+}
+
+export function publishLocal(filePath) {
+
+	parseMarkdownFile(filePath, (description, errors, contents) => {
+
+		if (!!errors.length) {
+			console.error('Markdown is invalid: ' + JSON.stringify(errors))
+			callback()
+		} else {
+			const metadata = description.metadata
+			console.log(`Publishing ${metadata.author}:${metadata.name}@${metadata.version}`)
+
+			if (process.platform === 'darwin') {
+				const outputDirectory = `${os.homedir()}/Library/Application\ Support/Optic/packages/${metadata.author}/${metadata.name}/`
+
+				const file = outputDirectory + metadata.version
+
+				fs.ensureDirSync(outputDirectory)
+				fs.writeJsonSync(file, description)
+
+				console.log('Published to '+ file)
+
+
+			} else {
+				console.error('Optic currently only works on macOS. Can not publish locally')
+			}
+
+		}
+
+	})
 }
 
 export function setupPublishRequest(filePath, callback, registry = hardcodedRegsitry) {
