@@ -15,5 +15,5 @@ export function newMarkdownFile(author, packageId, version) {
 }
 
 function contents(author, packageId, version) {
-	return `<!-- metadata author=${author} name=${packageId} version=${version} --> \n\n#${packageId}`
+	return `<!-- metadata author="${author}" name="${packageId}" version="${version}" --> \n\n#${packageId}`
 }

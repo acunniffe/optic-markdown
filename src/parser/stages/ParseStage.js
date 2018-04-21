@@ -58,5 +58,5 @@ export function parseString(contents = "", callback) {
 	const parseErrors = parsed.filter(i=> i.isError)
 	const parsedAnnotations = parsed.filter(i=> !i.isError)
 
-	callback(parsedAnnotations, errors.concat(parseErrors))
+	callback(parsedAnnotations, errors.concat(parseErrors), contents)
 }
