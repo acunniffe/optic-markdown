@@ -9,7 +9,7 @@
     "build": "sh build.sh"
   },
   "bin": {
-    "optic-md": "lib/cli.js"
+    "opticmd": "lib/cli.js"
   },
   "license": "MIT",
   "devDependencies": {
