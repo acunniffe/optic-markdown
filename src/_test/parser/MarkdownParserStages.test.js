@@ -87,6 +87,7 @@ describe('markdown', () => {
 				'type': 'annotationPair',
 				'properties': [
 					{'type': 'assignmentProperty', key: 'yields', value: 'Test from Schema', 'location': 5},
+					{'type': 'assignmentProperty', key: 'id', value: 'nameOfTransform', 'location': 5},
 					{'type': 'typeProperty', 'value': 'transformation-def', 'location': 5},
 					{'type': 'assignmentProperty', key: 'input', value: 'test', 'location': 5},
 					{'type': 'assignmentProperty', key: 'output', value: 'other:package/schema', 'location': 5}
@@ -105,6 +106,7 @@ describe('markdown', () => {
 
 				assert(equals(JSON.parse(JSON.stringify(transformation)), {
 					yields: 'Test from Schema',
+					id: 'nameOfTransform',
 					input: 'test',
 					output: 'other:package/schema',
 					ask:  {

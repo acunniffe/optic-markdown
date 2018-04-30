@@ -1,11 +1,13 @@
 
 import {InvalidTransformationDefinition} from "../Errors";
 import {extractAskCalls, extractFunction} from "../helpers/TransformationCode";
+import {validatePackageExportName} from "../parser/grammar/Regexes";
 
 export class Transformation {
 
-	constructor(yields, input, output, script, range) {
+	constructor(yields, id, input, output, script, range) {
 		this.yields = yields;
+		this.id = id;
 		this.input = input;
 		this.output = output;
 		this.ask = extractAskCalls(script).toJsonSchema();
@@ -19,6 +21,14 @@ export class Transformation {
 
 		if (!this.yields) {
 			return errors.push(new InvalidTransformationDefinition('Transformations need to a define "yields"'))
+		}
+
+		if (!this.id) {
+			return errors.push(new InvalidTransformationDefinition('Transformations need to a define "id"'))
+		} else {
+			if (!validatePackageExportName(this.id)) {
+				return errors.push(new InvalidTransformationDefinition('Transformation "id" is not valid'))
+			}
 		}
 
 		if (!this.input) {
@@ -37,6 +47,7 @@ export class Transformation {
 		if (!this.script) {
 			return errors.push(new InvalidTransformationDefinition('Transformations need to a define a script'))
 		}
+
 
 		return errors
 	}

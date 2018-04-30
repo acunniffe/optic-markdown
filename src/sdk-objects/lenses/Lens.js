@@ -1,4 +1,4 @@
-import {InvalidId, MissingProperty} from "../../Errors";
+import {InvalidId, InvalidLensDefinition, InvalidSchemaDefinition, MissingProperty} from "../../Errors";
 import {validatePackageExportName} from "../../parser/grammar/Regexes";
 
 export class Lens {
@@ -23,6 +23,10 @@ export class Lens {
 
 		if (!this.id || typeof this.id !== 'string') {
 			errors.push(MissingProperty("Missing Property 'id' in lens definition"))
+		} else {
+			if (!validatePackageExportName(this.id)) {
+				return errors.push(new InvalidLensDefinition('Schema "id" is not valid'))
+			}
 		}
 
 		if (!validatePackageExportName(this.id)) {

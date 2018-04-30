@@ -11,6 +11,7 @@ import {Snippet} from "../../sdk-objects/lenses/Snippet";
 import {Variable} from "../../sdk-objects/lenses/Variable";
 import {Container} from "../../sdk-objects/Container";
 import {Transformation} from "../../sdk-objects/Transformation";
+import {collectDuplicateIdErrors} from "../../helpers/DuplicateIdValidator";
 
 export function processAnnotations(rawAnnotations, callback) {
 
@@ -44,6 +45,7 @@ export function processAnnotations(rawAnnotations, callback) {
 
 	const errors = sdkAnnotations.filter(i=> !i.isValid()).map(i=> i.errors())
 		     .concat(asSDKObjects.filter(i=> !i.isValid()).map(i=> i.errors()))
+	   		 .concat(collectDuplicateIdErrors(validSDKObjects))
 
 	const description = new Description(metadataAnnotation, dependenciesAnnotation.asArray(),
 		validSDKObjects.filter(i=> i instanceof Schema),
@@ -157,11 +159,12 @@ export function annotationToSdkObject(annotation) {
 
 		case 'transformation-def': {
 			const yields = annotation.getProperty('yields')
+			const id = annotation.getProperty('id')
 			const input = annotation.getProperty('input')
 			const output = annotation.getProperty('output')
 			const script = annotation.codeBlock
 
-			return new Transformation(yields, input, output, script, range)
+			return new Transformation(yields, id, input, output, script, range)
 		}
 	}
 }
