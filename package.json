@@ -1,6 +1,6 @@
 {
   "name": "optic-markdown",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Human & Machine Readable Docs",
   "main": "lib/cli.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "build": "sh build.sh"
   },
   "bin": {
-    "optic-md": "lib/cli.js"
+    "opticmd": "lib/cli.js"
   },
   "license": "MIT",
   "devDependencies": {
