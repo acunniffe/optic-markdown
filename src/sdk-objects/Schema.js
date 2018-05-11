@@ -3,6 +3,8 @@ import deref from 'json-schema-deref-sync'
 import collection from 'lodash/collection'
 import {InvalidId, InvalidSchemaDefinition, InvalidTransformationDefinition, MissingProperty} from "../Errors";
 import {validatePackageExportName} from "../parser/grammar/Regexes";
+import deepMapKeys from 'deep-map-keys';
+
 var ajv = new Ajv();
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'));
 
@@ -18,7 +20,6 @@ export class Schema {
 		if (!this.isValid()) return false
 		const validate = ajv.compile(this.definition);
 		return validate(data);
-
 	}
 
 	errors() {
@@ -30,6 +31,17 @@ export class Schema {
 
 		if (this.definition && !ajv.validateSchema(this.definition)) {
 			errors.push(InvalidSchemaDefinition(ajv.errors))
+		}
+
+		let compileFailed = false
+		try {
+			ajv.compile(this.definition)
+		} catch (error) {
+			compileFailed = error
+		}
+
+		if (compileFailed) {
+			errors.push(InvalidSchemaDefinition(compileFailed))
 		}
 
 		if (!this.id || typeof this.id !== 'string') {
@@ -66,7 +78,94 @@ export class Schema {
 	}
 
 	derefSchema() {
-		return new Schema(this.id, deref(this.definition))
+		const dereffed = deref(this.definition)
+		delete dereffed.definitions
+		return new Schema(this.id, dereffed)
 	}
 
+	allInternalRefs() {
+		const refs = []
+		const internalPath = '#/definitions/internal/'
+		deepMapKeys(this.definition, (key, value) => {
+			if (key === '$ref') {
+				if (value.indexOf(internalPath) === 0) {
+					refs.push(value.split(internalPath)[1])
+				}
+				return key;
+			}
+		})
+
+		return refs;
+	}
+
+}
+
+export function allInternalRefs(schema) {
+	const refs = []
+	const internalPath = '#/definitions/internal/'
+	deepMapKeys(schema, (key, value) => {
+		if (key === '$ref') {
+			if (value.indexOf(internalPath) === 0) {
+				refs.push(value.split(internalPath)[1])
+			}
+			return key;
+		}
+	})
+
+	return refs;
+}
+
+export function addInternalRefsToSchemas(allSchemas) {
+	const mapping = {}
+	allSchemas.forEach(schema=> mapping[schema.id] = Object.assign({}, schema))
+
+	const refMappings = {}
+	allSchemas.forEach(schema=> {
+		const internalRefs = allInternalRefs(schema)
+		refMappings[schema.id] = internalRefs
+	})
+
+	function flattenTree(required, set = new Set([])) {
+		required.forEach(req=> {
+			if (!set.has(req)) {
+				set.add(req)
+				flattenTree(refMappings[req], set)
+			}
+		})
+		return set
+	}
+
+	Object.keys(refMappings).forEach((value)=> {
+		const flat = flattenTree(refMappings[value])
+		const internal = {}
+		flat.forEach(ref=> {
+			internal[ref] = mapping[ref].definition
+		})
+
+		const schema = allSchemas.find(i=> i.id === value)
+		schema.definition = {
+			...schema.definition,
+			definitions: {
+				...schema.definition.definitions,
+				internal: internal
+			}
+		}
+	})
+
+	return allSchemas
+}
+
+export function derefAllSchemas(schemas) {
+	schemas.forEach(schema=> {
+		if (schema.isValid()) {
+			try {
+				const newOne = schema.derefSchema()
+				schema.definition = newOne.definition
+			} catch (error) {
+
+			}
+		}
+	})
+
+	return schemas
 }

@@ -31,6 +31,7 @@
     "commander": "^2.12.2",
     "deep-equal": "^1.0.1",
     "deep-freeze": "0.0.1",
+    "deep-map-keys": "^1.2.0",
     "fs-extra": "^5.0.0",
     "get-arguments": "^1.0.2",
     "is-valid-path": "^0.1.1",

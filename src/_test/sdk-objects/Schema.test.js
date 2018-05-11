@@ -1,11 +1,12 @@
 import assert from 'assert'
 import equals from 'deep-equal'
-import {Schema} from "../../sdk-objects/Schema";
+import {addInternalRefsToSchemas, allInternalRefs, derefAllSchemas, Schema} from "../../sdk-objects/Schema";
+import Ajv from "ajv/lib/ajv";
 
-describe('Schemas', function() {
-	describe('that is valid', function() {
+describe('Schemas', function () {
+	describe('that is valid', function () {
 
-		it('works for an object schema', function() {
+		it('works for an object schema', function () {
 
 			const testSchema2 = {
 				title: "Test",
@@ -22,7 +23,7 @@ describe('Schemas', function() {
 
 	});
 
-	describe('an invalid schema', function() {
+	describe('an invalid schema', function () {
 		const error = 'The schema is not valid.'
 		it('fails when invalid types are used', function () {
 
@@ -35,7 +36,7 @@ describe('Schemas', function() {
 
 	})
 
-	describe('validation', function() {
+	describe('validation', function () {
 
 		const testSchema = {
 			title: "Test",
@@ -76,7 +77,7 @@ describe('Schemas', function() {
 				c: {type: 'string'},
 				a: {type: 'string'}
 			})
-			const order = schema.displayObject().map(i=> i.name)
+			const order = schema.displayObject().map(i => i.name)
 			assert(equals(order, ['a', 'b', 'c', 'd']))
 		})
 
@@ -88,7 +89,7 @@ describe('Schemas', function() {
 				a: {type: 'string'}
 			}, ['d', 'c', 'b', 'a'])
 
-			const order = schema.displayObject().map(i=> i.name)
+			const order = schema.displayObject().map(i => i.name)
 
 			console.log(order)
 			assert(equals(order, ['d', 'c', 'b', 'a']))
@@ -106,7 +107,7 @@ describe('Schemas', function() {
 				g: {type: 'string'}
 			}, ['a', 'c', 'b'])
 
-			const order = schema.displayObject().map(i=> i.name)
+			const order = schema.displayObject().map(i => i.name)
 
 			assert(equals(order, ['a', 'c', 'b', 'd', 'e', 'f', 'g']))
 
@@ -114,8 +115,8 @@ describe('Schemas', function() {
 
 	})
 
-	it("can get ref from path", ()=> {
-		const nestedSchema = new Schema('Parameter',{
+	it("can get ref from path", () => {
+		const nestedSchema = new Schema('Parameter', {
 			title: 'Parameter',
 			version: '1.0.0',
 			slug: 'js-example-route-parameter',
@@ -127,7 +128,7 @@ describe('Schemas', function() {
 			}
 		});
 
-		const schema = new Schema('Route',{
+		const schema = new Schema('Route', {
 			title: 'Route',
 			version: '1.0.0',
 			slug: 'js-example-route',
@@ -148,6 +149,73 @@ describe('Schemas', function() {
 		assert(
 			equals(schema.derefSchema().definition.properties.parameters.items, nestedSchema.definition))
 
+
+	})
+
+	describe('internal references', () => {
+
+		var ajv = new Ajv();
+		ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'));
+
+
+		const nestedReffedSchema = new Schema('thing_deep', {
+			type: 'object',
+			properties: {
+				number: {
+					type: 'number'
+				},
+				obj1: {
+					type: 'array',
+					items: {
+						$ref: '#/definitions/internal/thing1'
+					}
+				},
+			}
+		})
+
+		const reffedSchema = new Schema('thing1', {
+			type: 'object',
+			properties: {
+				number: {
+					type: 'number'
+				}
+			}
+		})
+
+		const schema = new Schema('Route', {
+			type: 'object',
+			properties: {
+				obj1: {
+					type: 'array',
+					items: {
+						$ref: '#/definitions/internal/thing1'
+					}
+				}
+			}
+		})
+
+		it('will fail to validate if an internal reference is not found', () => {
+			assert(!schema.isValid())
+		})
+
+		it('can find all internal references at any level', () => {
+			assert(equals(allInternalRefs(schema), ['thing1']))
+		})
+
+		it('can resolve internal refs', () => {
+			const newSchemas = addInternalRefsToSchemas([schema, reffedSchema, nestedReffedSchema])
+			assert(JSON.stringify(newSchemas[0].definition) === '{"type":"object","properties":{"obj1":{"type":"array","items":{"$ref":"#/definitions/internal/thing1"}}},"definitions":{"internal":{"thing1":{"type":"object","properties":{"number":{"type":"number"}}}}}}')
+			assert(JSON.stringify(newSchemas[1].definition) === '{"type":"object","properties":{"number":{"type":"number"}},"definitions":{"internal":{}}}')
+			assert(JSON.stringify(newSchemas[2].definition) === '{"type":"object","properties":{"number":{"type":"number"},"obj1":{"type":"array","items":{"$ref":"#/definitions/internal/thing1"}}},"definitions":{"internal":{"thing1":{"type":"object","properties":{"number":{"type":"number"}}}}}}')
+
+		})
+
+		it('can defer all schemas', ()=> {
+			const newSchemas = addInternalRefsToSchemas([schema, reffedSchema, nestedReffedSchema])
+			assert(equals(newSchemas.map(i=> i.isValid()), [true, true, true]) )
+			const dereffed = derefAllSchemas(newSchemas)
+			assert(equals(dereffed.map(i=> i.isValid()), [true, true, true]) )
+		})
 
 	})
 

@@ -74,6 +74,7 @@ describe('markdown', () => {
 				assert(!errors.length)
 				const schema = description.schemas[0]
 				assert(schema instanceof Schema)
+				console.log(schema)
 				assert(equals(schema.definition, testSchema))
 				assert(errors.length === 0)
 				done()

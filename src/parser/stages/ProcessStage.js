@@ -1,5 +1,5 @@
 import {Annotation} from "../Annotation";
-import {Schema} from "../../sdk-objects/Schema";
+import {addInternalRefsToSchemas, derefAllSchemas, Schema} from "../../sdk-objects/Schema";
 import {Dependencies} from "../../sdk-objects/Dependencies";
 import {Description} from "../../sdk-objects/Description";
 import {Finder} from "../../sdk-objects/lenses/Finder";
@@ -41,11 +41,17 @@ export function processAnnotations(rawAnnotations, callback) {
 
 	const asSDKObjects = validAnnotations.map(annotationToSdkObject)
 
+	//post processing for schema
+	const schemas = asSDKObjects.filter(i=> i instanceof Schema)
+	addInternalRefsToSchemas(schemas)
+	derefAllSchemas(schemas)
+
 	const validSDKObjects = asSDKObjects.filter(i=> i.isValid())
 
 	const errors = sdkAnnotations.filter(i=> !i.isValid()).map(i=> i.errors())
 		     .concat(asSDKObjects.filter(i=> !i.isValid()).map(i=> i.errors()))
 	   		 .concat(collectDuplicateIdErrors(validSDKObjects))
+
 
 	const description = new Description(metadataAnnotation, dependenciesAnnotation.asArray(),
 		validSDKObjects.filter(i=> i instanceof Schema),
