@@ -1,5 +1,5 @@
 import {Annotation} from "../Annotation";
-import {Schema} from "../../sdk-objects/Schema";
+import {addInternalRefsToSchemas, derefAllSchemas, Schema} from "../../sdk-objects/Schema";
 import {Dependencies} from "../../sdk-objects/Dependencies";
 import {Description} from "../../sdk-objects/Description";
 import {Finder} from "../../sdk-objects/lenses/Finder";
@@ -41,11 +41,17 @@ export function processAnnotations(rawAnnotations, callback) {
 
 	const asSDKObjects = validAnnotations.map(annotationToSdkObject)
 
+	//post processing for schema
+	const schemas = asSDKObjects.filter(i=> i instanceof Schema)
+	addInternalRefsToSchemas(schemas)
+	derefAllSchemas(schemas)
+
 	const validSDKObjects = asSDKObjects.filter(i=> i.isValid())
 
 	const errors = sdkAnnotations.filter(i=> !i.isValid()).map(i=> i.errors())
 		     .concat(asSDKObjects.filter(i=> !i.isValid()).map(i=> i.errors()))
 	   		 .concat(collectDuplicateIdErrors(validSDKObjects))
+
 
 	const description = new Description(metadataAnnotation, dependenciesAnnotation.asArray(),
 		validSDKObjects.filter(i=> i instanceof Schema),
@@ -125,11 +131,27 @@ export function annotationToSdkObject(annotation) {
 						unique: m.unique
 					})
 				})
-
 				return new Container(c.name, true, undefined, pulls, childrenRule, schemaComponents)
 			})
 
-			return new Lens(name, id, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers, range)
+
+			const initialValue = (()=> {
+				const initialValueString = annotation.getProperty('initial')
+				if (initialValueString) {
+					let asJson;
+					try {
+						asJson = JSON.parse(initialValueString)
+					} catch (err) {
+						asJson = `Invalid JSON provided for initialValue ${asJson}`
+					}
+
+					return asJson
+				} else {
+					return {}
+				}
+			})()
+
+			return new Lens(name, id, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers, initialValue, range)
 		}
 		case 'container-def': {
 			const name = annotation.getProperty('name')

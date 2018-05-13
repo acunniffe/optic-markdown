@@ -74,6 +74,7 @@ describe('markdown', () => {
 				assert(!errors.length)
 				const schema = description.schemas[0]
 				assert(schema instanceof Schema)
+				console.log(schema)
 				assert(equals(schema.definition, testSchema))
 				assert(errors.length === 0)
 				done()
@@ -137,6 +138,12 @@ describe('markdown', () => {
 							type: 'assignmentProperty',
 							key: 'id',
 							value: 'testabc',
+							location: 19
+						},
+						{
+							type: 'assignmentProperty',
+							key: 'initial',
+							value: '{"test": true}',
 							location: 19
 						},
 						{
@@ -212,6 +219,7 @@ describe('markdown', () => {
 					}],
 					"rules": [],
 					"variables": [],
+					"initialValue": {"test": true},
 					"subcontainers": [{
 						"name": "container name",
 						"subcontainer": true,

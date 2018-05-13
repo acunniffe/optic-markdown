@@ -3,7 +3,7 @@ import {validatePackageExportName} from "../../parser/grammar/Regexes";
 
 export class Lens {
 
-	constructor(name, id, schema, snippet, scope, components, rules, variables, subcontainers, range) {
+	constructor(name, id, schema, snippet, scope, components, rules, variables, subcontainers, initialValue = {}, range) {
 
 		this.name = name
 		this.id = id
@@ -14,6 +14,7 @@ export class Lens {
 		this.rules = rules
 		this.variables = variables
 		this.subcontainers = subcontainers
+		this.initialValue = initialValue || {}
 		this.range = range
 	}
 
@@ -31,6 +32,10 @@ export class Lens {
 
 		if (!validatePackageExportName(this.id)) {
 			errors.push(InvalidId(this.id))
+		}
+
+		if (typeof this.initialValue !== 'object') {
+			errors.push(new InvalidLensDefinition(`Initial Value is not valid ${this.initialValue}`))
 		}
 
 		return errors
