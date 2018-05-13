@@ -88,7 +88,7 @@ assignTo -> ("=>" | "<=>") {%
 
 %}
 
-assignmentProperty -> (("schema" | "id" | "name" | "yields" | "author" | "version" | "language" | "input" | "output") _ "=" _ (sqstring | dqstring)) {%
+assignmentProperty -> (("schema" | "id" | "name" | "yields" | "author" | "version" | "language" | "input" | "output" | "initial") _ "=" _ (sqstring | dqstring)) {%
    function(data, location) {
        return {
            type: 'assignmentProperty',

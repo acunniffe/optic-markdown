@@ -131,11 +131,27 @@ export function annotationToSdkObject(annotation) {
 						unique: m.unique
 					})
 				})
-
 				return new Container(c.name, true, undefined, pulls, childrenRule, schemaComponents)
 			})
 
-			return new Lens(name, id, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers, range)
+
+			const initialValue = (()=> {
+				const initialValueString = annotation.getProperty('initial')
+				if (initialValueString) {
+					let asJson;
+					try {
+						asJson = JSON.parse(initialValueString)
+					} catch (err) {
+						asJson = `Invalid JSON provided for initialValue ${asJson}`
+					}
+
+					return asJson
+				} else {
+					return {}
+				}
+			})()
+
+			return new Lens(name, id, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers, initialValue, range)
 		}
 		case 'container-def': {
 			const name = annotation.getProperty('name')

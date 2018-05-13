@@ -141,6 +141,12 @@ describe('markdown', () => {
 							location: 19
 						},
 						{
+							type: 'assignmentProperty',
+							key: 'initial',
+							value: '{"test": true}',
+							location: 19
+						},
+						{
 							type: 'finderProperty',
 							finderType: 'stringFinder',
 							string: 'definedAs',
@@ -213,6 +219,7 @@ describe('markdown', () => {
 					}],
 					"rules": [],
 					"variables": [],
+					"initialValue": {"test": true},
 					"subcontainers": [{
 						"name": "container name",
 						"subcontainer": true,

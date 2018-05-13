@@ -273,6 +273,8 @@ var grammar = {
     {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$8"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$1$string$9", "symbols": [{"literal":"o"}, {"literal":"u"}, {"literal":"t"}, {"literal":"p"}, {"literal":"u"}, {"literal":"t"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$9"]},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1$string$10", "symbols": [{"literal":"i"}, {"literal":"n"}, {"literal":"i"}, {"literal":"t"}, {"literal":"i"}, {"literal":"a"}, {"literal":"l"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "assignmentProperty$subexpression$1$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1$string$10"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["sqstring"]},
     {"name": "assignmentProperty$subexpression$1$subexpression$2", "symbols": ["dqstring"]},
     {"name": "assignmentProperty$subexpression$1", "symbols": ["assignmentProperty$subexpression$1$subexpression$1", "_", {"literal":"="}, "_", "assignmentProperty$subexpression$1$subexpression$2"]},
