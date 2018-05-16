@@ -62,6 +62,15 @@ export function InvalidSchemaDefinition(msg, level = 'error') {
 	}
 }
 
+export function InvalidLensDefinition(msg, level = 'error') {
+	return {
+		level,
+		type: 'InvalidLensDefinition',
+		message: msg,
+		isError: true
+	}
+}
+
 export function InvalidTransformationDefinition(msg, level = 'error') {
 	return {
 		level,
@@ -103,6 +112,15 @@ export function InvalidId(id, level = 'error') {
 		level,
 		type: 'InvalidId',
 		message: `'${id}' is not a valid identifier.`,
+		isError: true
+	}
+}
+
+export function DuplicateIdsFoundInMarkdown(id, level = 'error') {
+	return {
+		level,
+		type: 'DuplicateIdsFoundInMarkdown',
+		message: `Id '${id}' is assigned to more than one annotation`,
 		isError: true
 	}
 }

@@ -1,9 +1,9 @@
-import {InvalidId, MissingProperty} from "../../Errors";
+import {InvalidId, InvalidLensDefinition, InvalidSchemaDefinition, MissingProperty} from "../../Errors";
 import {validatePackageExportName} from "../../parser/grammar/Regexes";
 
 export class Lens {
 
-	constructor(name, id, schema, snippet, scope, components, rules, variables, subcontainers, range) {
+	constructor(name, id, schema, snippet, scope, components, rules, variables, subcontainers, initialValue = {}, range) {
 
 		this.name = name
 		this.id = id
@@ -14,6 +14,7 @@ export class Lens {
 		this.rules = rules
 		this.variables = variables
 		this.subcontainers = subcontainers
+		this.initialValue = initialValue || {}
 		this.range = range
 	}
 
@@ -23,10 +24,18 @@ export class Lens {
 
 		if (!this.id || typeof this.id !== 'string') {
 			errors.push(MissingProperty("Missing Property 'id' in lens definition"))
+		} else {
+			if (!validatePackageExportName(this.id)) {
+				return errors.push(new InvalidLensDefinition('Schema "id" is not valid'))
+			}
 		}
 
 		if (!validatePackageExportName(this.id)) {
 			errors.push(InvalidId(this.id))
+		}
+
+		if (typeof this.initialValue !== 'object') {
+			errors.push(new InvalidLensDefinition(`Initial Value is not valid ${this.initialValue}`))
 		}
 
 		return errors

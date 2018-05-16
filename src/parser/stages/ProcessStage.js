@@ -1,5 +1,5 @@
 import {Annotation} from "../Annotation";
-import {Schema} from "../../sdk-objects/Schema";
+import {addInternalRefsToSchemas, derefAllSchemas, Schema} from "../../sdk-objects/Schema";
 import {Dependencies} from "../../sdk-objects/Dependencies";
 import {Description} from "../../sdk-objects/Description";
 import {Finder} from "../../sdk-objects/lenses/Finder";
@@ -11,6 +11,7 @@ import {Snippet} from "../../sdk-objects/lenses/Snippet";
 import {Variable} from "../../sdk-objects/lenses/Variable";
 import {Container} from "../../sdk-objects/Container";
 import {Transformation} from "../../sdk-objects/Transformation";
+import {collectDuplicateIdErrors} from "../../helpers/DuplicateIdValidator";
 
 export function processAnnotations(rawAnnotations, callback) {
 
@@ -40,10 +41,17 @@ export function processAnnotations(rawAnnotations, callback) {
 
 	const asSDKObjects = validAnnotations.map(annotationToSdkObject)
 
+	//post processing for schema
+	const schemas = asSDKObjects.filter(i=> i instanceof Schema)
+	addInternalRefsToSchemas(schemas)
+	derefAllSchemas(schemas)
+
 	const validSDKObjects = asSDKObjects.filter(i=> i.isValid())
 
 	const errors = sdkAnnotations.filter(i=> !i.isValid()).map(i=> i.errors())
 		     .concat(asSDKObjects.filter(i=> !i.isValid()).map(i=> i.errors()))
+	   		 .concat(collectDuplicateIdErrors(validSDKObjects))
+
 
 	const description = new Description(metadataAnnotation, dependenciesAnnotation.asArray(),
 		validSDKObjects.filter(i=> i instanceof Schema),
@@ -123,11 +131,27 @@ export function annotationToSdkObject(annotation) {
 						unique: m.unique
 					})
 				})
-
 				return new Container(c.name, true, undefined, pulls, childrenRule, schemaComponents)
 			})
 
-			return new Lens(name, id, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers, range)
+
+			const initialValue = (()=> {
+				const initialValueString = annotation.getProperty('initial')
+				if (initialValueString) {
+					let asJson;
+					try {
+						asJson = JSON.parse(initialValueString)
+					} catch (err) {
+						asJson = `Invalid JSON provided for initialValue ${asJson}`
+					}
+
+					return asJson
+				} else {
+					return {}
+				}
+			})()
+
+			return new Lens(name, id, schema, snippet, annotation.scope, [...codeComponents, ...schemaComponents], [], variableComponents, subcontainers, initialValue, range)
 		}
 		case 'container-def': {
 			const name = annotation.getProperty('name')
@@ -157,11 +181,12 @@ export function annotationToSdkObject(annotation) {
 
 		case 'transformation-def': {
 			const yields = annotation.getProperty('yields')
+			const id = annotation.getProperty('id')
 			const input = annotation.getProperty('input')
 			const output = annotation.getProperty('output')
 			const script = annotation.codeBlock
 
-			return new Transformation(yields, input, output, script, range)
+			return new Transformation(yields, id, input, output, script, range)
 		}
 	}
 }

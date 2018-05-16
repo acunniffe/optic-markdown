@@ -74,6 +74,7 @@ describe('markdown', () => {
 				assert(!errors.length)
 				const schema = description.schemas[0]
 				assert(schema instanceof Schema)
+				console.log(schema)
 				assert(equals(schema.definition, testSchema))
 				assert(errors.length === 0)
 				done()
@@ -87,6 +88,7 @@ describe('markdown', () => {
 				'type': 'annotationPair',
 				'properties': [
 					{'type': 'assignmentProperty', key: 'yields', value: 'Test from Schema', 'location': 5},
+					{'type': 'assignmentProperty', key: 'id', value: 'nameOfTransform', 'location': 5},
 					{'type': 'typeProperty', 'value': 'transformation-def', 'location': 5},
 					{'type': 'assignmentProperty', key: 'input', value: 'test', 'location': 5},
 					{'type': 'assignmentProperty', key: 'output', value: 'other:package/schema', 'location': 5}
@@ -105,6 +107,7 @@ describe('markdown', () => {
 
 				assert(equals(JSON.parse(JSON.stringify(transformation)), {
 					yields: 'Test from Schema',
+					id: 'nameOfTransform',
 					input: 'test',
 					output: 'other:package/schema',
 					ask:  {
@@ -135,6 +138,12 @@ describe('markdown', () => {
 							type: 'assignmentProperty',
 							key: 'id',
 							value: 'testabc',
+							location: 19
+						},
+						{
+							type: 'assignmentProperty',
+							key: 'initial',
+							value: '{"test": true}',
 							location: 19
 						},
 						{
@@ -210,6 +219,7 @@ describe('markdown', () => {
 					}],
 					"rules": [],
 					"variables": [],
+					"initialValue": {"test": true},
 					"subcontainers": [{
 						"name": "container name",
 						"subcontainer": true,
