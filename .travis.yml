@@ -6,3 +6,12 @@ node_js:
 before_install:
   - npm install -g babel-cli
   - npm install -g nearley
+
+env:
+  - CXX=g++-4.8
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
