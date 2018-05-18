@@ -116,7 +116,14 @@ variableProperty -> (sqstring | dqstring) _ ("*" | "^") {%
    }
 %}
 
-mapSchemaProperty -> ("mapUnique" | "map") _ "(" _ (sqstring | dqstring) _ ")" _ assignTo _ memberExpression {%
+
+mapSchemaProperty -> (mapSchemaToArrayProperty | mapSchemaToObjectProperty) {%
+  function (data) {
+    return data[0][0]
+  }
+%}
+
+mapSchemaToArrayProperty -> ("mapUnique" | "map") _ "(" _ (sqstring | dqstring) _ ")" _ assignTo _ memberExpression {%
 
    function(data, location) {
 
@@ -130,6 +137,26 @@ mapSchemaProperty -> ("mapUnique" | "map") _ "(" _ (sqstring | dqstring) _ ")" _
            location,
            editable: data[8],
            propertyPath: data[10]
+       };
+   }
+
+%}
+
+mapSchemaToObjectProperty -> "mapToObject" _ "(" _ (sqstring | dqstring) _ ", " _ (sqstring | dqstring) _ ")" _ assignTo _ memberExpression {%
+
+   function(data, location) {
+
+       const schema = data[4][0]
+       const key = data[8][0]
+
+       return {
+           type: 'mapSchemaProperty',
+           unique: true,
+           toMap: key,
+           schema,
+           location,
+           editable: data[12],
+           propertyPath: data[14]
        };
    }
 

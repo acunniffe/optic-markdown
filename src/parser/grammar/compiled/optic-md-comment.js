@@ -309,13 +309,20 @@ var grammar = {
             };
         }
         },
-    {"name": "mapSchemaProperty$subexpression$1$string$1", "symbols": [{"literal":"m"}, {"literal":"a"}, {"literal":"p"}, {"literal":"U"}, {"literal":"n"}, {"literal":"i"}, {"literal":"q"}, {"literal":"u"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
-    {"name": "mapSchemaProperty$subexpression$1", "symbols": ["mapSchemaProperty$subexpression$1$string$1"]},
-    {"name": "mapSchemaProperty$subexpression$1$string$2", "symbols": [{"literal":"m"}, {"literal":"a"}, {"literal":"p"}], "postprocess": function joiner(d) {return d.join('');}},
-    {"name": "mapSchemaProperty$subexpression$1", "symbols": ["mapSchemaProperty$subexpression$1$string$2"]},
-    {"name": "mapSchemaProperty$subexpression$2", "symbols": ["sqstring"]},
-    {"name": "mapSchemaProperty$subexpression$2", "symbols": ["dqstring"]},
-    {"name": "mapSchemaProperty", "symbols": ["mapSchemaProperty$subexpression$1", "_", {"literal":"("}, "_", "mapSchemaProperty$subexpression$2", "_", {"literal":")"}, "_", "assignTo", "_", "memberExpression"], "postprocess": 
+    {"name": "mapSchemaProperty$subexpression$1", "symbols": ["mapSchemaToArrayProperty"]},
+    {"name": "mapSchemaProperty$subexpression$1", "symbols": ["mapSchemaToObjectProperty"]},
+    {"name": "mapSchemaProperty", "symbols": ["mapSchemaProperty$subexpression$1"], "postprocess": 
+        function (data) {
+          return data[0][0]
+        }
+        },
+    {"name": "mapSchemaToArrayProperty$subexpression$1$string$1", "symbols": [{"literal":"m"}, {"literal":"a"}, {"literal":"p"}, {"literal":"U"}, {"literal":"n"}, {"literal":"i"}, {"literal":"q"}, {"literal":"u"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "mapSchemaToArrayProperty$subexpression$1", "symbols": ["mapSchemaToArrayProperty$subexpression$1$string$1"]},
+    {"name": "mapSchemaToArrayProperty$subexpression$1$string$2", "symbols": [{"literal":"m"}, {"literal":"a"}, {"literal":"p"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "mapSchemaToArrayProperty$subexpression$1", "symbols": ["mapSchemaToArrayProperty$subexpression$1$string$2"]},
+    {"name": "mapSchemaToArrayProperty$subexpression$2", "symbols": ["sqstring"]},
+    {"name": "mapSchemaToArrayProperty$subexpression$2", "symbols": ["dqstring"]},
+    {"name": "mapSchemaToArrayProperty", "symbols": ["mapSchemaToArrayProperty$subexpression$1", "_", {"literal":"("}, "_", "mapSchemaToArrayProperty$subexpression$2", "_", {"literal":")"}, "_", "assignTo", "_", "memberExpression"], "postprocess": 
         
         function(data, location) {
         
@@ -329,6 +336,31 @@ var grammar = {
                 location,
                 editable: data[8],
                 propertyPath: data[10]
+            };
+        }
+        
+        },
+    {"name": "mapSchemaToObjectProperty$string$1", "symbols": [{"literal":"m"}, {"literal":"a"}, {"literal":"p"}, {"literal":"T"}, {"literal":"o"}, {"literal":"O"}, {"literal":"b"}, {"literal":"j"}, {"literal":"e"}, {"literal":"c"}, {"literal":"t"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "mapSchemaToObjectProperty$subexpression$1", "symbols": ["sqstring"]},
+    {"name": "mapSchemaToObjectProperty$subexpression$1", "symbols": ["dqstring"]},
+    {"name": "mapSchemaToObjectProperty$string$2", "symbols": [{"literal":","}, {"literal":" "}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "mapSchemaToObjectProperty$subexpression$2", "symbols": ["sqstring"]},
+    {"name": "mapSchemaToObjectProperty$subexpression$2", "symbols": ["dqstring"]},
+    {"name": "mapSchemaToObjectProperty", "symbols": ["mapSchemaToObjectProperty$string$1", "_", {"literal":"("}, "_", "mapSchemaToObjectProperty$subexpression$1", "_", "mapSchemaToObjectProperty$string$2", "_", "mapSchemaToObjectProperty$subexpression$2", "_", {"literal":")"}, "_", "assignTo", "_", "memberExpression"], "postprocess": 
+        
+        function(data, location) {
+        
+            const schema = data[4][0]
+            const key = data[8][0]
+        
+            return {
+                type: 'mapSchemaProperty',
+                unique: true,
+                toMap: key,
+                schema,
+                location,
+                editable: data[12],
+                propertyPath: data[14]
             };
         }
         
