@@ -4,6 +4,8 @@ import collection from 'lodash/collection'
 import {InvalidId, InvalidSchemaDefinition, InvalidTransformationDefinition, MissingProperty} from "../Errors";
 import {validatePackageExportName} from "../parser/grammar/Regexes";
 import deepMapKeys from 'deep-map-keys';
+import {types} from 'optic-js-common'
+
 
 var ajv = new Ajv();
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'));
@@ -61,20 +63,6 @@ export class Schema {
 
 	isValid() {
 		return !this.errors().length
-	}
-
-	displayObject(properties = this.definition.properties, order = this.definition.order) {
-
-		const entires = Object.entries(properties)
-
-		const mapped = entires.map(i=> {
-			return {obj: i[1], name: i[0], order: (order && order.includes(i[0]) ? order.indexOf(i[0]) : undefined)}
-		})
-
-		const sorted = collection.sortBy(
-			mapped,  ['order', 'name']);
-
-		return sorted
 	}
 
 	derefSchema() {
@@ -151,6 +139,20 @@ export function addInternalRefsToSchemas(allSchemas) {
 			}
 		}
 	})
+
+	//add optic defaults
+	allSchemas.forEach((schema => {
+		schema.definition = {
+			...schema.definition,
+			definitions: {
+				...schema.definition.definitions,
+				optic: {
+					"code": types.RawCode,
+					"token": types.Token
+				}
+			}
+		}
+	}))
 
 	return allSchemas
 }

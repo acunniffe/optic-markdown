@@ -46,6 +46,7 @@
     "object-filter": "^1.0.2",
     "object-path": "^0.11.4",
     "object.map": "^1.0.0",
+    "optic-js-common": "file:../optic-js-common/optic-js-common-1.0.1.tgz",
     "prompt": "^1.0.0",
     "read-file": "^0.2.0",
     "request": "^2.85.0",
