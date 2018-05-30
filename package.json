@@ -15,8 +15,7 @@
   "license": "MIT",
   "devDependencies": {
     "mocha": "^3.4.2",
-    "uglifyjs-webpack-plugin": "^1.1.6",
-    "webpack": "^3.10.0"
+    "uglifyjs-webpack-plugin": "^1.1.6"
   },
   "dependencies": {
     "acorn": "^5.4.1",
