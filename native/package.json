@@ -1,0 +1,9 @@
+{
+  "name": "optic-markdown",
+  "description": "Human & Machine Readable Docs",
+  "bin": "../lib/justparsercli.js",
+  "pkg": {
+    "scripts": "lib/parser/grammar/compiled/optic-md-comment.js",
+    "targets": ["node8-macos-x64"]
+  }
+}
