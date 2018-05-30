@@ -128,6 +128,7 @@ export function annotationToSdkObject(annotation) {
 						type: 'schema',
 						propertyPath: m.propertyPath.keys,
 						schema: m.schema,
+						mapTo: m.toMap,
 						unique: m.unique
 					})
 				})
