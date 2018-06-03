@@ -29,13 +29,21 @@ export class Ask {
 		this._fields.push({type: 'schema', key, description})
 	}
 
+	for(key, description, func) {
+		const isValid = typeof key === 'string' && typeof description === 'string' && typeof func === 'function'
+
+		if (!isValid) throw new Error('Invalid schema dynamic ask definition')
+
+		this._fields.push({type: 'dynamic', description, key, 'func': func.toString()})
+	}
+
 	size() {
 		return this._fields.length
 	}
 
 	toJsonSchema() {
 		const order = []
-		const schemaFields = this._fields.map(i=> {
+		const schemaFields = this._fields.filter(i=> i.type !== 'dynamic').map(i=> {
 			order.push(i.key)
 			return askToSchemaField(i)
 		})
@@ -57,6 +65,18 @@ export class Ask {
 		}
 
 		return schema
+	}
+
+	collectDynamicAsk() {
+		const dynamicAsks = {}
+		this._fields.filter(i=> i.type === 'dynamic').map(i=> {
+			dynamicAsks[i.key] = {
+				description: i.description,
+				func: i.func
+			}
+		})
+
+		return dynamicAsks
 	}
 
 }
