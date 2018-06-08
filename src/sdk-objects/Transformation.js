@@ -6,11 +6,14 @@ import {validatePackageExportName} from "../parser/grammar/Regexes";
 export class Transformation {
 
 	constructor(yields, id, input, output, script, range) {
+		const extractedAsk = extractAskCalls(script)
+
 		this.yields = yields;
 		this.id = id;
 		this.input = input;
 		this.output = output;
-		this.ask = extractAskCalls(script).toJsonSchema();
+		this.ask = extractedAsk.toJsonSchema();
+		this.dynamicAsk = extractedAsk.collectDynamicAsk();
 		this.script = extractFunction(script, 'transform');
 		this.range = range
 	}
