@@ -18,7 +18,6 @@ export class Transformation {
 		this.range = range
 	}
 
-
 	errors() {
 		const errors = []
 
