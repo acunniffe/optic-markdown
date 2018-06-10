@@ -70,14 +70,14 @@ describe('Ask', () => {
 			assert.throws(() => askToSchemaField({type: 'fake'}))
 		})
 
-		it('can generate a valid schema from ask instance', () => {
+		it.only('can generate a valid schema from ask instance', () => {
 			const f = fixture()
 			f.forPrimitive('string', 'desc', 'string')
 			f.forLens('lens', 'to do X', 'test:package/schema')
 			f.forSchema('schema', 'for this purpose')
 			f.forPrimitive('X?', 'desc', 'boolean')
-			f.for('t', 'desc', () => {
-			}) //should not show up
+			f.forObject('testObject', 'desc', 'test:package/schema')
+			f.for('testDynamic', 'desc', () => {}) //should not show up
 
 			assert(equals(f.toJsonSchema(), {
 					"type": "object",
@@ -93,10 +93,15 @@ describe('Ask', () => {
 							"type": "string",
 							"_opticValidation": {"accepts": "schema"}
 						},
-						"X?": {"description": "desc", "type": "boolean"}
+						"X?": {"description": "desc", "type": "boolean"},
+						"testObject": {
+							"description": "desc",
+							"type": "string",
+							"_opticValidation": {"accepts": "object", "withSchema": "test:package/schema"}
+						}
 					},
-					"_order": ["string", "lens", "schema", "X?"],
-					"required": ["string", "lens", "schema", "X?"]
+					"_order": ["string", "lens", "schema", "X?", "testObject"],
+					"required": ["string", "lens", "schema", "X?", "testObject"]
 				}
 			))
 		})

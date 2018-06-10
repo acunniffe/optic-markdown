@@ -37,6 +37,14 @@ export class Ask {
 		this._fields.push({type: 'dynamic', description, key, 'func': func.toString()})
 	}
 
+	forObject(key, description, withSchema) {
+		const isValid = typeof key === 'string' && typeof description === 'string' && typeof withSchema === 'string'
+
+		if (!isValid) throw new Error('Invalid lens ask definition.')
+
+		this._fields.push({type: 'object', key, description, withSchema})
+	}
+
 	size() {
 		return this._fields.length
 	}
@@ -100,6 +108,15 @@ export function askToSchemaField(askField) {
 			[askField.key]: {description: askField.description, type: 'string',
 				_opticValidation: {
 					accepts: 'schema'
+				}
+			}
+		}
+
+		case 'object': return {
+			[askField.key]: {description: askField.description, type: 'string',
+				_opticValidation: {
+					accepts: 'object',
+					withSchema: askField.withSchema
 				}
 			}
 		}
