@@ -21,12 +21,15 @@ export class Ask {
 	}
 
 	forSchema(key, description) {
-
 		const isValid = typeof key === 'string' && typeof description === 'string'
 
 		if (!isValid) throw new Error('Invalid schema ask definition')
 
 		this._fields.push({type: 'schema', key, description})
+	}
+
+	forFile(key, description) {
+		this._fields.push({type: 'file', key, description})
 	}
 
 	for(key, description, func) {
@@ -117,6 +120,14 @@ export function askToSchemaField(askField) {
 				_opticValidation: {
 					accepts: 'object',
 					withSchema: askField.withSchema
+				}
+			}
+		}
+
+		case 'file': return {
+			[askField.key]: {description: askField.description, type: 'string',
+				_opticValidation: {
+					accepts: 'file'
 				}
 			}
 		}
