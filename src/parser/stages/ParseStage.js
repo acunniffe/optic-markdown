@@ -1,8 +1,6 @@
-import {commentAnnotationRegex} from "../grammar/Regexes";
+import {annotationContentRegex, commentAnnotationRegex} from "../Regexes";
 import fs from 'fs'
 import {NoAnnotationsFound, ParseError} from "../../Errors";
-const compiledGrammar  = require('../grammar/compiled/optic-md-comment')
-const nearley = require("nearley")
 
 export function parse(file, callback) {
 
@@ -24,21 +22,28 @@ export function parseString(contents = "", callback) {
 
 	const errors = []
 
-	const annotations = contents.match(commentAnnotationRegex)
-
-	const annotationRanges = []
+	const annotations = []
 
 	var match
 	while (match = commentAnnotationRegex.exec(contents)) {
 		const start = match.index
 		const end = commentAnnotationRegex.lastIndex
-		annotationRanges.push({
-			start,
-			end
-		})
+
+		const a = {
+			range: {
+				start,
+				end
+			},
+			contents: match[1]
+		}
+
+		if (match[4]) { //has code block
+			a.codeBlock = match[4].substring(match[4].indexOf('\n')+1)
+		}
+		annotations.push(a)
 	}
 
-	if (annotations === null) {
+	if (!annotations.length) {
 		errors.push(NoAnnotationsFound())
 		return callback(undefined, errors)
 	}
@@ -47,9 +52,16 @@ export function parseString(contents = "", callback) {
 	const parsed = annotations.map(a=> {
 		i++
 		try {
-			const parser = new nearley.Parser(compiledGrammar);
-			parser.feed(a);
-			return {...parser.results[0], range: annotationRanges[i]}
+
+			const matches = annotationContentRegex().exec(a.contents);
+
+			if (!matches) {
+				return ParseError('Could not parse annotation at '+ annotationRanges[i]+'. Check syntax and try again')
+			}
+
+			const sdkType = matches[1]
+			const description = JSON.parse(matches[2])
+			return {sdkType, description, range: a.range}
 		} catch (err) {
 			return ParseError(err)
 		}

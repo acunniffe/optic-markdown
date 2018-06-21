@@ -17,6 +17,24 @@ export function NoAnnotationsFound(level = 'warn') {
 	}
 }
 
+export function InvalidPackageAnnotation(problem, level = 'error') {
+	return {
+		level,
+		type: 'InvalidPackageAnnotation',
+		message: `Package Annotation contains the following errors: ${problem}`,
+		isError: true
+	}
+}
+
+export function InvalidLensAnnotation(problem, level = 'error') {
+	return {
+		level,
+		type: 'InvalidLensAnnotation',
+		message: `Lens Annotation contains the following errors: ${problem}`,
+		isError: true
+	}
+}
+
 export function NoValidDefinitionType(annotation, level = 'error') {
 	return {
 		level,

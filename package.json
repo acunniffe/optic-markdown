@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run build && find ./lib -name '*.test.js' | xargs mocha -R spec",
     "scratch": "npm run build && node ./lib/cli.js examples/ShowConfirmAlert.md",
-    "build": "sh build.sh",
+    "build": "rm -rf ./lib && babel src --out-dir lib",
     "packageNative": "npm run build && pkg native/package.json --output opticmarkdown"
   },
   "bin": {

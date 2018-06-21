@@ -2,19 +2,22 @@ import Ajv from 'ajv'
 import deref from 'json-schema-deref-sync'
 import collection from 'lodash/collection'
 import {InvalidId, InvalidSchemaDefinition, InvalidTransformationDefinition, MissingProperty} from "../Errors";
-import {validatePackageExportName} from "../parser/grammar/Regexes";
+import {validatePackageExportName} from "../parser/Regexes";
 import deepMapKeys from 'deep-map-keys';
 import {types} from 'optic-js-common'
 
-
-var ajv = new Ajv();
+const ajv = new Ajv();
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'));
 
 export class Schema {
 
-	constructor(id, json, range) {
+	constructor(id, definition, internal = false, range) {
+
+		delete definition.id
+
 		this.id = id;
-		this.definition = json;
+		this.internal = internal
+		this.definition = definition;
 		this.range = range
 	}
 
@@ -65,6 +68,20 @@ export class Schema {
 		return !this.errors().length
 	}
 
+	displayObject(properties = this.definition.properties, order = this.definition.order) {
+
+		const entires = Object.entries(properties)
+
+		const mapped = entires.map(i=> {
+			return {obj: i[1], name: i[0], order: (order && order.includes(i[0]) ? order.indexOf(i[0]) : undefined)}
+		})
+
+		const sorted = collection.sortBy(
+			mapped,  ['order', 'name']);
+
+		return sorted
+	}
+
 	derefSchema() {
 		const dereffed = deref(this.definition)
 		delete dereffed.definitions
@@ -104,8 +121,9 @@ export function allInternalRefs(schema) {
 }
 
 export function addInternalRefsToSchemas(allSchemas) {
+
 	const mapping = {}
-	allSchemas.forEach(schema=> mapping[schema.id] = Object.assign({}, schema))
+	allSchemas.filter(i=> !i.internal).forEach(schema=> mapping[schema.id] = Object.assign({}, schema))
 
 	const refMappings = {}
 	allSchemas.forEach(schema=> {
@@ -135,24 +153,14 @@ export function addInternalRefsToSchemas(allSchemas) {
 			...schema.definition,
 			definitions: {
 				...schema.definition.definitions,
-				internal: internal
-			}
-		}
-	})
-
-	//add optic defaults
-	allSchemas.forEach((schema => {
-		schema.definition = {
-			...schema.definition,
-			definitions: {
-				...schema.definition.definitions,
+				internal: internal,
 				optic: {
-					"code": types.RawCode,
-					"token": types.Token
+					code: types.RawCode,
+					token: types.Token
 				}
 			}
 		}
-	}))
+	})
 
 	return allSchemas
 }

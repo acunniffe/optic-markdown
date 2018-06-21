@@ -1,11 +1,15 @@
 # Test File
 Contents of the test file
 
-<!-- schema-def -->
+<!-- Schema
+ {"type": "object"}
+ -->
 
 ## Lens
 
-<!-- lens-def -->
+<!-- Lens
+ {"type": "object"}
+ -->
 ```javascript
 var test = 'block'
 jkhjhghfg
