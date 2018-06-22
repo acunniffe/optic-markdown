@@ -15,11 +15,9 @@ const ajv = new Ajv();
 const validation = {
 	"type": "object",
 	"required": [
-		"name",
 		"id",
 		"snippet",
 		"schema",
-		"initialValue"
 	],
 	"properties": {
 		"name": {
@@ -100,6 +98,7 @@ export class Lens {
 		this.containers = description.containers
 		this.schema = description.schema
 		this.initialValue = description.initialValue || {}
+		this.internal = !!description.internal
 
 		this.range = range
 	}

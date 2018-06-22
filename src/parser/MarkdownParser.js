@@ -17,7 +17,6 @@ export function parseMarkdownFile(filePath, callback) {
 					validSDKObjects.filter(i=> i instanceof Lens),
 					validSDKObjects.filter(i=> i instanceof Transformation))
 
-
 				callback(description, errors1.concat(errors2), contents)
 
 			})

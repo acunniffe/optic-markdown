@@ -56,12 +56,12 @@ export function parseString(contents = "", callback) {
 			const matches = annotationContentRegex().exec(a.contents);
 
 			if (!matches) {
-				return ParseError('Could not parse annotation at '+ annotationRanges[i]+'. Check syntax and try again')
+				return ParseError('Could not parse annotation at ' + annotations[i].range.start + '. Check syntax and try again')
 			}
 
 			const sdkType = matches[1]
 			const description = JSON.parse(matches[2])
-			return {sdkType, description, range: a.range}
+			return {sdkType, description, range: a.range, codeBlock: a.codeBlock}
 		} catch (err) {
 			return ParseError(err)
 		}

@@ -34,11 +34,6 @@ export class Transformation {
 			return errors.push(new InvalidTransformationDefinition('Transformations need to a define an "input"'))
 		}
 
-		if (!this.output) {
-			return errors.push(new InvalidTransformationDefinition('Transformations need to a define an "output"'))
-		}
-
-
 		if (this.script === null) {
 			return errors.push(new InvalidTransformationDefinition(`Transformation code does not contain a valid Javascript Function named "transform"`))
 		}

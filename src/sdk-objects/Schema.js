@@ -14,6 +14,7 @@ export class Schema {
 	constructor(id, definition, internal = false, range) {
 
 		delete definition.id
+		delete definition.internal
 
 		this.id = id;
 		this.internal = internal

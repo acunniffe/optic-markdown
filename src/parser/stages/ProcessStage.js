@@ -13,7 +13,7 @@ export function processAnnotations(rawAnnotations, callback) {
 
 		switch (annotation.sdkType) {
 			case 'Schema': {
-				return new Schema(annotation.description.id, annotation.description, false, annotation.range);
+				return new Schema(annotation.description.id, annotation.description, (!!annotation.description.internal), annotation.range);
 				break;
 			}
 
@@ -40,13 +40,13 @@ export function processAnnotations(rawAnnotations, callback) {
 	const internalSchemas = sdkObjects
 		.filter(i=> i instanceof Lens && typeof i.schema === 'object')
 		.map(i=> new Schema(i.id, i.schema, true))
-	const schemas = sdkObjects.filter(i=> i instanceof Schema).concat(internalSchemas)
+	const schemas = sdkObjects.filter(i=> i instanceof Schema && i.isValid()).concat(internalSchemas)
 	addInternalRefsToSchemas(schemas)
 	derefAllSchemas(schemas)
 
 	//put updated internal schemas back in lenses
 	sdkObjects
-		.filter(i=> i instanceof Lens)
+		.filter(i=> i instanceof Lens && typeof i.schema === 'object')
 		.forEach(lens=> {
 			const foundSchema = schemas.find(s=> s.id === lens.id && s.internal)
 			if (foundSchema) {
@@ -54,11 +54,12 @@ export function processAnnotations(rawAnnotations, callback) {
 			}
 		})
 
+
 	const validSDKObjects = sdkObjects.filter(i=> i.isValid())
 
 	const errors = sdkObjects.filter(i=> !i.isValid()).map(i=> i.errors())
 		.concat(sdkObjects.filter(i=> !i.isValid()).map(i=> i.errors()))
 		.concat(collectDuplicateIdErrors(validSDKObjects))
 
-	callback(sdkObjects, errors)
+	callback(validSDKObjects, errors)
 }
