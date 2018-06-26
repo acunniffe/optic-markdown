@@ -9,8 +9,6 @@ export function publishPackage(filePath, callback, registry = hardcodedRegsitry)
 	setupPublishRequest(filePath, (pubReq)=> {
 
 		if (pubReq) {
-			// console.log(pubReq)
-
 			const body = JSON.stringify(pubReq)
 
 			request({url: `${registryHost}/packages/create`, method: 'POST', body}, (err, response, body) => {
@@ -35,13 +33,13 @@ export function publishLocal(filePath) {
 			console.error('Markdown is invalid: ' + JSON.stringify(errors))
 			callback()
 		} else {
-			const metadata = description.metadata
-			console.log(`Publishing ${metadata.author}:${metadata.name}@${metadata.version}`)
+			const info = description.info
+			console.log(`Publishing ${info.author}:${info.package}@${info.version}`)
 
 			if (process.platform === 'darwin') {
-				const outputDirectory = `${os.homedir()}/Library/Application\ Support/Optic/packages/${metadata.author}/${metadata.name}/`
+				const outputDirectory = `${os.homedir()}/Library/Application\ Support/Optic/packages/${info.author}/${info.package}/`
 
-				const file = outputDirectory + metadata.version
+				const file = outputDirectory + info.version
 
 				fs.ensureDirSync(outputDirectory)
 				fs.writeJsonSync(file, description)
@@ -65,19 +63,19 @@ export function setupPublishRequest(filePath, callback, registry = hardcodedRegs
 			console.error('Markdown is invalid: ' + JSON.stringify(errors))
 			callback()
 		} else {
-			const metadata = description.metadata
-			console.log(`Publishing ${metadata.author}:${metadata.name}@${metadata.version}`)
+			const info = description.info
+			console.log(`Publishing ${info.author}:${info.package}@${info.version}`)
 			const credentials = getCredentials(registry).then((creds)=> {
 				if (!creds) {
-					console.error('No credentials saved. Run optic-md adduser OR createuser')
+					console.error('No credentials saved. Run opticmd adduser OR createuser')
 					callback()
 					return
 				}
 
 				const pubRequest = {
-					namespace: metadata.author,
-					packageName: metadata.name,
-					version: metadata.version,
+					namespace: info.author,
+					packageName: info.package,
+					version: info.version,
 					email: creds.email,
 					password: creds.password,
 					mdVersion: pJson.version,
