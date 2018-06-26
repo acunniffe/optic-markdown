@@ -34,6 +34,7 @@
     "deep-map-keys": "^1.2.0",
     "fs-extra": "^5.0.0",
     "get-arguments": "^1.0.2",
+    "http-server": "^0.11.1",
     "is-valid-path": "^0.1.1",
     "json-schema-deref-sync": "^0.3.3",
     "keytar": "^4.2.1",

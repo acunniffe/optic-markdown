@@ -123,4 +123,15 @@ export class Lens {
 		return !this.errors().length
 	}
 
+
+	cleanForDescription() {  //@todo there's something wrong with object refs when we flatten the schemas. This is a workaround.
+		if (typeof this.schema === 'object') {
+			return {
+				...this,
+				schema: this.schema.definition.definition
+			}
+		}
+
+		return this
+	}
 }

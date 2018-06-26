@@ -39,7 +39,7 @@ export function processAnnotations(rawAnnotations, callback) {
 	//@todo make sure this works for schema that we nest inside of lenses
 	const internalSchemas = sdkObjects
 		.filter(i=> i instanceof Lens && typeof i.schema === 'object')
-		.map(i=> new Schema(i.id, i.schema, true))
+		.map(i=> new Schema(i.id, {definition: i.schema}, true))
 	const schemas = sdkObjects.filter(i=> i instanceof Schema && i.isValid()).concat(internalSchemas)
 	addInternalRefsToSchemas(schemas)
 	derefAllSchemas(schemas)

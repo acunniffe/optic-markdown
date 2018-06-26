@@ -7,6 +7,8 @@ import {newMarkdownFile} from "./helpers/MdBuilder";
 import {addUser, createUser} from "./registry/UserManagment";
 import pJson from '../package.json'
 import {publishLocal, publishPackage} from "./registry/Publish";
+import {createServer} from 'http-server'
+const { exec } = require('child_process');
 
 prompt.message = '';
 
@@ -71,6 +73,12 @@ if (program.args[0] === "init") {
 	publishPackage(program.args[1])
 } else if (program.args[0] === "publishlocal") {
 	publishLocal(program.args[1])
+} else if (program.args[0] === "starttrainer") {
+	console.log('Starting Optic trainer....')
+	exec('open /Applications/Optic.app')
+	createServer({root: './trainer-build'}).listen(30334)
+	exec('open http://localhost:30334')
+
 } else {
 
 	if (program.raw) {

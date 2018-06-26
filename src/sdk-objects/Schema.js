@@ -104,6 +104,10 @@ export class Schema {
 		return refs;
 	}
 
+	cleanForDescription() { //@todo there's something wrong with object refs when we flatten the schemas. This is a workaround.
+		return {...this, definition: this.definition.definition}
+	}
+
 }
 
 export function allInternalRefs(schema) {
@@ -146,7 +150,7 @@ export function addInternalRefsToSchemas(allSchemas) {
 		const flat = flattenTree(refMappings[value])
 		const internal = {}
 		flat.forEach(ref=> {
-			internal[ref] = mapping[ref].definition
+			internal[ref] = mapping[ref].definition.definition
 		})
 
 		const schema = allSchemas.find(i=> i.id === value)
