@@ -53,68 +53,6 @@ describe('Schemas', function () {
 
 	})
 
-	describe('display', function () {
-
-		function testSchemaWithFields(properties, order) {
-			const testSchema = {
-				title: "Test",
-				slug: "test-slug",
-				version: "0.0.1-beta",
-				description: "testing",
-				type: 'object',
-				properties,
-				order
-			}
-
-			return new Schema('Test', testSchema)
-
-		}
-
-		it('order is alphabetical', function () {
-			const schema = testSchemaWithFields({
-				d: {type: 'string'},
-				b: {type: 'string'},
-				c: {type: 'string'},
-				a: {type: 'string'}
-			})
-			const order = schema.displayObject().map(i => i.name)
-			assert(equals(order, ['a', 'b', 'c', 'd']))
-		})
-
-		it('order can be overridden', function () {
-			const schema = testSchemaWithFields({
-				d: {type: 'string'},
-				b: {type: 'string'},
-				c: {type: 'string'},
-				a: {type: 'string'}
-			}, ['d', 'c', 'b', 'a'])
-
-			const order = schema.displayObject().map(i => i.name)
-
-			console.log(order)
-			assert(equals(order, ['d', 'c', 'b', 'a']))
-
-		})
-
-		it('order can be overridden selectively', function () {
-			const schema = testSchemaWithFields({
-				d: {type: 'string'},
-				b: {type: 'string'},
-				c: {type: 'string'},
-				a: {type: 'string'},
-				e: {type: 'string'},
-				f: {type: 'string'},
-				g: {type: 'string'}
-			}, ['a', 'c', 'b'])
-
-			const order = schema.displayObject().map(i => i.name)
-
-			assert(equals(order, ['a', 'c', 'b', 'd', 'e', 'f', 'g']))
-
-		})
-
-	})
-
 	it("can get ref from path", () => {
 		const nestedSchema = new Schema('Parameter', {
 			title: 'Parameter',
@@ -203,14 +141,17 @@ describe('Schemas', function () {
 		})
 
 		it('can resolve internal refs', () => {
+
 			const newSchemas = addInternalRefsToSchemas([schema, reffedSchema, nestedReffedSchema])
-			assert(JSON.stringify(newSchemas[0].definition) === '{"type":"object","properties":{"obj1":{"type":"array","items":{"$ref":"#/definitions/internal/thing1"}}},"definitions":{"internal":{"thing1":{"type":"object","properties":{"number":{"type":"number"}}}}}}')
-			assert(JSON.stringify(newSchemas[1].definition) === '{"type":"object","properties":{"number":{"type":"number"}},"definitions":{"internal":{}}}')
-			assert(JSON.stringify(newSchemas[2].definition) === '{"type":"object","properties":{"number":{"type":"number"},"obj1":{"type":"array","items":{"$ref":"#/definitions/internal/thing1"}}},"definitions":{"internal":{"thing1":{"type":"object","properties":{"number":{"type":"number"}}}}}}')
+
+			assert(JSON.stringify(newSchemas[0].definition) === '{"type":"object","properties":{"obj1":{"type":"array","items":{"$ref":"#/definitions/internal/thing1"}}},"definitions":{"internal":{"thing1":{"type":"object","properties":{"number":{"type":"number"}}}},"optic":{"code":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"code"},"value":{"type":"string"}},"title":"Code","default":{"value":"code","_valueFormat":"code"}},"token":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"token"},"value":{"type":"string"}},"title":"Token","default":{"value":"token","_valueFormat":"token"}}}}}')
+
+			assert(JSON.stringify(newSchemas[1].definition) === '{"type":"object","properties":{"number":{"type":"number"}},"definitions":{"internal":{},"optic":{"code":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"code"},"value":{"type":"string"}},"title":"Code","default":{"value":"code","_valueFormat":"code"}},"token":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"token"},"value":{"type":"string"}},"title":"Token","default":{"value":"token","_valueFormat":"token"}}}}}')
+			assert(JSON.stringify(newSchemas[2].definition) === '{"type":"object","properties":{"number":{"type":"number"},"obj1":{"type":"array","items":{"$ref":"#/definitions/internal/thing1"}}},"definitions":{"internal":{"thing1":{"type":"object","properties":{"number":{"type":"number"}}}},"optic":{"code":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"code"},"value":{"type":"string"}},"title":"Code","default":{"value":"code","_valueFormat":"code"}},"token":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"token"},"value":{"type":"string"}},"title":"Token","default":{"value":"token","_valueFormat":"token"}}}}}')
 
 		})
 
-		it('can defer all schemas', ()=> {
+		it('can deref all schemas', ()=> {
 			const newSchemas = addInternalRefsToSchemas([schema, reffedSchema, nestedReffedSchema])
 			assert(equals(newSchemas.map(i=> i.isValid()), [true, true, true]) )
 			const dereffed = derefAllSchemas(newSchemas)

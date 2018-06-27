@@ -1,13 +1,9 @@
-import {Metadata} from "./Metadata";
-
 export class Description {
 
-	constructor(metadata = Metadata.empty, dependencies, schemas, lenses, containers, transformations) {
-		this.metadata = metadata
-		this.dependencies = dependencies
+	constructor(info, schemas, lenses, transformations) {
+		this.info = info
 		this.schemas = schemas
 		this.lenses = lenses
-		this.containers = containers
 		this.transformations = transformations
 	}
 
@@ -17,7 +13,7 @@ export class Description {
 	}
 
 	canPublish() {
-		return this.metadata && this.isValid()
+		return this.info && this.isValid()
 	}
 
 }

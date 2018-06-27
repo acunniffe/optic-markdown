@@ -2,17 +2,23 @@ import Ajv from 'ajv'
 import deref from 'json-schema-deref-sync'
 import collection from 'lodash/collection'
 import {InvalidId, InvalidSchemaDefinition, InvalidTransformationDefinition, MissingProperty} from "../Errors";
-import {validatePackageExportName} from "../parser/grammar/Regexes";
+import {validatePackageExportName} from "../parser/Regexes";
 import deepMapKeys from 'deep-map-keys';
+import {types} from 'optic-js-common'
 
-var ajv = new Ajv();
+const ajv = new Ajv();
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'));
 
 export class Schema {
 
-	constructor(id, json, range) {
+	constructor(id, definition, internal = false, range) {
+
+		delete definition.id
+		delete definition.internal
+
 		this.id = id;
-		this.definition = json;
+		this.internal = internal
+		this.definition = definition;
 		this.range = range
 	}
 
@@ -98,6 +104,10 @@ export class Schema {
 		return refs;
 	}
 
+	cleanForDescription() { //@todo there's something wrong with object refs when we flatten the schemas. This is a workaround.
+		return {...this, definition: this.definition.definition}
+	}
+
 }
 
 export function allInternalRefs(schema) {
@@ -116,8 +126,9 @@ export function allInternalRefs(schema) {
 }
 
 export function addInternalRefsToSchemas(allSchemas) {
+
 	const mapping = {}
-	allSchemas.forEach(schema=> mapping[schema.id] = Object.assign({}, schema))
+	allSchemas.filter(i=> !i.internal).forEach(schema=> mapping[schema.id] = Object.assign({}, schema))
 
 	const refMappings = {}
 	allSchemas.forEach(schema=> {
@@ -139,7 +150,7 @@ export function addInternalRefsToSchemas(allSchemas) {
 		const flat = flattenTree(refMappings[value])
 		const internal = {}
 		flat.forEach(ref=> {
-			internal[ref] = mapping[ref].definition
+			internal[ref] = mapping[ref].definition.definition
 		})
 
 		const schema = allSchemas.find(i=> i.id === value)
@@ -147,7 +158,11 @@ export function addInternalRefsToSchemas(allSchemas) {
 			...schema.definition,
 			definitions: {
 				...schema.definition.definitions,
-				internal: internal
+				internal: internal,
+				optic: {
+					code: types.RawCode,
+					token: types.Token
+				}
 			}
 		}
 	})

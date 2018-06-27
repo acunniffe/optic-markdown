@@ -21,12 +21,31 @@ export class Ask {
 	}
 
 	forSchema(key, description) {
-
 		const isValid = typeof key === 'string' && typeof description === 'string'
 
 		if (!isValid) throw new Error('Invalid schema ask definition')
 
 		this._fields.push({type: 'schema', key, description})
+	}
+
+	forFile(key, description) {
+		this._fields.push({type: 'file', key, description})
+	}
+
+	for(key, description, func) {
+		const isValid = typeof key === 'string' && typeof description === 'string' && typeof func === 'function'
+
+		if (!isValid) throw new Error('Invalid schema dynamic ask definition')
+
+		this._fields.push({type: 'dynamic', description, key, 'func': func.toString()})
+	}
+
+	forObject(key, description, withSchema) {
+		const isValid = typeof key === 'string' && typeof description === 'string' && typeof withSchema === 'string'
+
+		if (!isValid) throw new Error('Invalid lens ask definition.')
+
+		this._fields.push({type: 'object', key, description, withSchema})
 	}
 
 	size() {
@@ -35,7 +54,7 @@ export class Ask {
 
 	toJsonSchema() {
 		const order = []
-		const schemaFields = this._fields.map(i=> {
+		const schemaFields = this._fields.filter(i=> i.type !== 'dynamic').map(i=> {
 			order.push(i.key)
 			return askToSchemaField(i)
 		})
@@ -59,6 +78,18 @@ export class Ask {
 		return schema
 	}
 
+	collectDynamicAsk() {
+		const dynamicAsks = {}
+		this._fields.filter(i=> i.type === 'dynamic').map(i=> {
+			dynamicAsks[i.key] = {
+				description: i.description,
+				func: i.func
+			}
+		})
+
+		return dynamicAsks
+	}
+
 }
 
 
@@ -80,6 +111,23 @@ export function askToSchemaField(askField) {
 			[askField.key]: {description: askField.description, type: 'string',
 				_opticValidation: {
 					accepts: 'schema'
+				}
+			}
+		}
+
+		case 'object': return {
+			[askField.key]: {description: askField.description, type: 'string',
+				_opticValidation: {
+					accepts: 'object',
+					withSchema: askField.withSchema
+				}
+			}
+		}
+
+		case 'file': return {
+			[askField.key]: {description: askField.description, type: 'string',
+				_opticValidation: {
+					accepts: 'file'
 				}
 			}
 		}
