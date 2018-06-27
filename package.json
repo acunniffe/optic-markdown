@@ -1,12 +1,12 @@
 {
   "name": "optic-markdown",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Human & Machine Readable Docs",
   "main": "lib/cli.js",
   "scripts": {
     "test": "npm run build && find ./lib -name '*.test.js' | xargs mocha -R spec",
-    "scratch": "npm run build && node ./lib/cli.js examples/ShowConfirmAlert.md",
-    "build": "sh build.sh",
+    "scratch": "npm run build && node ./lib/cli.js examples/TwoAnnotations.md",
+    "build": "rm -rf ./lib && babel src --out-dir lib",
     "packageNative": "npm run build && pkg native/package.json --output opticmarkdown"
   },
   "bin": {
@@ -34,6 +34,7 @@
     "deep-map-keys": "^1.2.0",
     "fs-extra": "^5.0.0",
     "get-arguments": "^1.0.2",
+    "http-server": "^0.11.1",
     "is-valid-path": "^0.1.1",
     "json-schema-deref-sync": "^0.3.3",
     "keytar": "^4.2.1",

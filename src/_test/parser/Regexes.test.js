@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {commentAnnotationRegex} from "../../parser/grammar/Regexes";
+import {commentAnnotationRegex, annotationContentRegex} from "../../parser/Regexes";
 
 describe('comment annotation regex', ()=> {
 
@@ -24,6 +24,34 @@ describe('comment annotation regex', ()=> {
 		const results = "Hello <!-- testing this -->  other text... ```javascript \n hello \n ``` world".match(commentAnnotationRegex)
 		assert(results.length === 1)
 		assert(results[0] === '<!-- testing this -->')
+	})
+
+})
+
+describe('annotation content regex', ()=> {
+
+	it('matches lens & json', ()=> {
+		const results = "Lens {}".match(annotationContentRegex())
+		assert(results.length === 1)
+		assert(results[0] === 'Lens {}')
+	})
+
+	it('matches schema & json', ()=> {
+		const results = "Schema {}".match(annotationContentRegex())
+		assert(results.length === 1)
+		assert(results[0] === 'Schema {}')
+	})
+
+	it('matches Transformation & json', ()=> {
+		const results = "Transformation {}".match(annotationContentRegex())
+		assert(results.length === 1)
+		assert(results[0] === 'Transformation {}')
+	})
+
+	it('matches Package & json', ()=> {
+		const results = "Package {}".match(annotationContentRegex())
+		assert(results.length === 1)
+		assert(results[0] === 'Package {}')
 	})
 
 })

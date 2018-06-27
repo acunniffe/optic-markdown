@@ -1,22 +1,19 @@
-
 import {InvalidTransformationDefinition} from "../Errors";
 import {extractAskCalls, extractFunction} from "../helpers/TransformationCode";
-import {validatePackageExportName} from "../parser/grammar/Regexes";
+import {validatePackageExportName} from "../parser/Regexes";
 
 export class Transformation {
 
-	constructor(yields, id, input, output, script, range) {
-		const extractedAsk = extractAskCalls(script)
-
-		this.yields = yields;
-		this.id = id;
-		this.input = input;
-		this.output = output;
-		this.ask = extractedAsk.toJsonSchema();
-		this.dynamicAsk = extractedAsk.collectDynamicAsk();
+	constructor(description, script, range) {
+		this.yields = description.yields;
+		this.id = description.id;
+		this.input = description.input;
+		this.output = description.output;
+		this.ask = extractAskCalls(script).toJsonSchema();
 		this.script = extractFunction(script, 'transform');
 		this.range = range
 	}
+
 
 	errors() {
 		const errors = []
@@ -44,7 +41,6 @@ export class Transformation {
 		if (!this.script) {
 			return errors.push(new InvalidTransformationDefinition('Transformations need to a define a script'))
 		}
-
 
 		return errors
 	}

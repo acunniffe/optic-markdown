@@ -141,8 +141,11 @@ describe('Schemas', function () {
 		})
 
 		it('can resolve internal refs', () => {
+
 			const newSchemas = addInternalRefsToSchemas([schema, reffedSchema, nestedReffedSchema])
+
 			assert(JSON.stringify(newSchemas[0].definition) === '{"type":"object","properties":{"obj1":{"type":"array","items":{"$ref":"#/definitions/internal/thing1"}}},"definitions":{"internal":{"thing1":{"type":"object","properties":{"number":{"type":"number"}}}},"optic":{"code":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"code"},"value":{"type":"string"}},"title":"Code","default":{"value":"code","_valueFormat":"code"}},"token":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"token"},"value":{"type":"string"}},"title":"Token","default":{"value":"token","_valueFormat":"token"}}}}}')
+
 			assert(JSON.stringify(newSchemas[1].definition) === '{"type":"object","properties":{"number":{"type":"number"}},"definitions":{"internal":{},"optic":{"code":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"code"},"value":{"type":"string"}},"title":"Code","default":{"value":"code","_valueFormat":"code"}},"token":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"token"},"value":{"type":"string"}},"title":"Token","default":{"value":"token","_valueFormat":"token"}}}}}')
 			assert(JSON.stringify(newSchemas[2].definition) === '{"type":"object","properties":{"number":{"type":"number"},"obj1":{"type":"array","items":{"$ref":"#/definitions/internal/thing1"}}},"definitions":{"internal":{"thing1":{"type":"object","properties":{"number":{"type":"number"}}}},"optic":{"code":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"code"},"value":{"type":"string"}},"title":"Code","default":{"value":"code","_valueFormat":"code"}},"token":{"type":"object","required":["_valueFormat","value"],"properties":{"_valueFormat":{"type":"string","const":"token"},"value":{"type":"string"}},"title":"Token","default":{"value":"token","_valueFormat":"token"}}}}}')
 
