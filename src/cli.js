@@ -76,7 +76,7 @@ if (program.args[0] === "init") {
 } else if (program.args[0] === "starttrainer") {
 	console.log('Starting Optic trainer....')
 	exec('open /Applications/Optic.app')
-	createServer({root: __dirname+'../trainer-build'}).listen(30334)
+	createServer({root: __dirname+'/../trainer-build'}).listen(30334)
 	exec('open http://localhost:30334')
 
 } else {

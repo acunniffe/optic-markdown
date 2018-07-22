@@ -1,6 +1,6 @@
 {
   "name": "optic-markdown",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "description": "Human & Machine Readable Docs",
   "main": "lib/cli.js",
   "scripts": {
@@ -14,20 +14,23 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
     "mocha": "^3.4.2",
     "uglifyjs-webpack-plugin": "^1.1.6"
   },
   "dependencies": {
+    "@babel/cli": "^7.0.0-beta.51",
+    "@babel/core": "^7.0.0-beta.51",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.54",
+    "@babel/preset-stage-3": "^7.0.0-beta.51",
+    "@babel/standalone": "^7.0.0-beta.51",
     "acorn": "^5.4.1",
     "ajv": "^5.2.2",
     "args-js": "^0.10.12",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-remove-strict-mode": "0.0.2",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-es2015": "^6.24.1",
     "commander": "^2.12.2",
     "deep-equal": "^1.0.1",
     "deep-freeze": "0.0.1",

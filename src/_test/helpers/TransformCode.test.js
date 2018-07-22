@@ -5,10 +5,14 @@ describe('Transformation Code Extraction', ()=> {
 
 	it('extracts & transforms raw javascript for the transform function', ()=> {
 
-		const raw = ` \n function transform(test) {  return { me: ()=> {}}  } `
+		const raw = ` \n function transform(test) {  return { me: {...test} } }`
+
+		console.log(extractFunction(raw, 'transform'))
 
 		assert(extractFunction(raw, 'transform') === 'function transform(test) {\n' +
-			'  return { me: function me() {} };\n' +
+			'  return {\n' +
+			'    me: _objectSpread({}, test)\n' +
+			'  };\n' +
 			'}')
 	})
 
