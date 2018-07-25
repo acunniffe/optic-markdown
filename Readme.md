@@ -3,4 +3,4 @@
 ## Install
 Run 
 `npm install optic-markdown -g`
-## [Docs](https://useoptic.com/authoring-get-started)
+## [Docs](https://useoptic.com/docs/authoring/extending-optic)
