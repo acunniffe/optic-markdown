@@ -67,7 +67,6 @@ const validation = {
 				]
 			}
 		},
-		"language": {"type": "string"},
 		"schema": {
 			"anyOf": [
 				{
@@ -92,7 +91,7 @@ export class Lens {
 		this.id = description.id
 		this.snippet = {
 			block: snippet,
-			language: description.language
+			language: description.language || 'es7'
 		}
 		this.value = description.value
 		this.variables = description.variables
